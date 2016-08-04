@@ -3,5 +3,61 @@ ML: Random Forest
 Estimators: 100
 Testing: 70-30
 Feature: Bag-of-Words
-Score:
-Time: 
+Score: 81.81%
+Time: 0.35s
+
+Experiment #2
+ML: Random Forest
+Estimators: 100
+Testing: 70-30
+Features: 2-grams (Bigrams)
+Score: 79.59%
+Time: 1.69s
+
+Experiment #3
+ML: Random Forest 
+Estimators: 100 
+Testing: 70-30 
+Features: TF-IDF (Term Frequency - Inverse Document Frequency)
+Score: 81.00%
+Time: 0.34s
+
+Experiment #4
+ML: Random Forest 
+Estimators: 100 
+Testing: 70-30 
+Features: TF-IDF (Term Frequency - Inverse Document Frequency) + Top 400 (Term Frequency)
+Score: 81.96%
+Time: 0.05s
+
+Experiment #5
+ML: Random Forest
+Estimators: 100
+Testing: 70-30
+Feature: Bag-of-Words + Top 400 (Term Frequency)
+Score: 82.52%
+Time: 0.05s
+
+Experiment #6
+ML: Random Forest
+Estimators: 100
+Testing: 70-30
+Features: 2-grams (Bigrams) + Top 400 (Term Frequency)
+Score: 75.64% 
+Time: 0.09s
+
+Experiment #7 
+ML: Random Forest
+Estimators: 100
+Testing: 70-30
+Features: 3-grams (Trigrams) + Top 400 (Term Frequency)
+Score: 74.99%  
+Time: 0.16s
+
+Experiment #8
+ML: Random Forest
+Estimators: 100
+Testing: 70-30
+Features: 3-grams (Trigrams) 
+Score: 77.92%  
+Time: 3.97s

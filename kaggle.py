@@ -77,12 +77,12 @@ for i in range(len(train_df)):
 # print("WRITING TO FILE COMPLETE")
 
 #Implement Bag-Of-Words
-vectorizer = CountVectorizer(analyzer="word", ngram_range=(1, 1))
+vectorizer = CountVectorizer(analyzer="word", ngram_range=(3, 3))
 data_features_train = vectorizer.fit_transform(clean_comments_train)
 data_features_train = data_features_train.toarray()
 
 #Implement TF-IDF Vectorizer
-# tf_idf = TfidfVectorizer()
+# tf_idf = TfidfVectorizer(max_features=400)
 # data_features_train = tf_idf.fit_transform(clean_comments_train)
 # data_features_train = data_features_train.toarray()
 
@@ -104,6 +104,7 @@ for i in range(len(test_df)):
 	clean_comment = cleaning(test_df['Comment'][i])
 	clean_comments_test.append(clean_comment)
 
+#data_features_test = tf_idf.transform(clean_comments_test)	
 data_features_test = vectorizer.transform(clean_comments_test)
 data_features_test = data_features_test.toarray()
 
