@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np 
 import re
 import codecs
+import time
 
 from bs4 import BeautifulSoup
 from contractions import contractions
@@ -57,8 +58,8 @@ df.drop(df.index[[4,798,3127,6183,6347]], inplace=True)
 df.reset_index(inplace=True, drop=True)
 
 #Split Training and Testing Set
-train_df = df.iloc[:4620]
-test_df = df.iloc[4620:]
+train_df = df.iloc[:4610]
+test_df = df.iloc[4610:]
 
 #Rest the index of the test set
 test_df.reset_index(inplace=True, drop=True)
@@ -86,16 +87,16 @@ data_features_train = data_features_train.toarray()
 # data_features_train = data_features_train.toarray()
 
 #Implement Random Forest ML
-# forest = RandomForestClassifier(n_estimators = 100)
-# forest = forest.fit( data_features_train, train_df["Insult"] )
+forest = RandomForestClassifier(n_estimators = 100)
+forest = forest.fit( data_features_train, train_df["Insult"] )
 
 #Implement Naive-Bayes Classifier
 # nb = GaussianNB()
 # nb.fit( data_features_train, train_df["Insult"] )
 
 #Implement SVM Classifier
-model = SVC(kernel='linear')
-model.fit( data_features_train, train_df["Insult"] )
+# model = SVC(kernel='linear')
+# model.fit( data_features_train, train_df["Insult"] )
 
 
 clean_comments_test = []
@@ -106,14 +107,24 @@ for i in range(len(test_df)):
 data_features_test = vectorizer.transform(clean_comments_test)
 data_features_test = data_features_test.toarray()
 
-#result = forest.predict(data_features_test)
+#MACHINE LEARNING PREDICTION
+
+start_time = time.time()
+
+result = forest.predict(data_features_test)
 #result = nb.predict(data_features_test)
-result = model.predict(data_features_test)
+#result = model.predict(data_features_test)
+
+end_time = time.time()
+
+duration = round(end_time - start_time, 2)
+
 
 test_labels = test_df.as_matrix(columns=['Insult'])
 
 score = accuracy_score(y_true=test_df['Insult'], y_pred=result)
-print(score)
+print("SCORE: ", round(score*100, 2))
+print("TIME TAKEN: ", duration)
 
 # ACCURACY SCORE
 # ==============

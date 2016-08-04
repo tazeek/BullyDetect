@@ -1,0 +1,7 @@
+Experiment #1
+ML: Random Forest
+Estimators: 100
+Testing: 70-30
+Feature: Bag-of-Words
+Score:
+Time: 
