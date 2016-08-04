@@ -77,12 +77,12 @@ for i in range(len(train_df)):
 # print("WRITING TO FILE COMPLETE")
 
 #Implement Bag-Of-Words/N-grams
-vectorizer = CountVectorizer(analyzer="word", ngram_range=(3, 3))
+vectorizer = CountVectorizer(analyzer="word", ngram_range=(3, 3), max_features = 400)
 data_features_train = vectorizer.fit_transform(clean_comments_train)
 data_features_train = data_features_train.toarray()
 
 #Implement TF-IDF Vectorizer
-# tf_idf = TfidfVectorizer(max_features=400)
+# tf_idf = TfidfVectorizer()
 # data_features_train = tf_idf.fit_transform(clean_comments_train)
 # data_features_train = data_features_train.toarray()
 
@@ -91,12 +91,12 @@ data_features_train = data_features_train.toarray()
 # forest = forest.fit( data_features_train, train_df["Insult"] )
 
 #Implement Naive-Bayes Classifier
-nb = GaussianNB()
-nb.fit( data_features_train, train_df["Insult"] )
+# nb = GaussianNB()
+# nb.fit( data_features_train, train_df["Insult"] )
 
 #Implement SVM Classifier
-# model = SVC(kernel='linear')
-# model.fit( data_features_train, train_df["Insult"] )
+model = SVC(kernel='linear')
+model.fit( data_features_train, train_df["Insult"] )
 
 
 clean_comments_test = []
@@ -113,8 +113,8 @@ data_features_test = data_features_test.toarray()
 start_time = time.time()
 
 #result = forest.predict(data_features_test)
-result = nb.predict(data_features_test)
-#result = model.predict(data_features_test)
+#result = nb.predict(data_features_test)
+result = model.predict(data_features_test)
 
 end_time = time.time()
 

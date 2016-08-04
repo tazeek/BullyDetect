@@ -121,3 +121,63 @@ Score: 60.03%
 Time: 5.65s
 
 ==== NAIVE-BAYES DONE ====
+
+Experiment #17
+ML: SVM
+Testing: 70-30
+Features: Bag-of-Words
+Score: 83.22%
+Time: 57.22s
+
+Experiment #18 
+ML: SVM
+Testing: 70-30
+Features: Bag-of-Words + Top 400 (Term Frequency)
+Score: 81.81% 
+Time: 1.12s
+
+Experiment #19
+ML: SVM
+Testing: 70-30
+Features: TF-IDF
+Score:  84.28%
+Test: 70.64s
+
+Experiment #20
+ML: SVM
+Testing: 70-30
+Features: TF-IDF + Top 400 (Term Frequency)
+Score: 82.52% 
+Test: 1.12s 
+
+Experiment #21
+ML: SVM
+Testing: 70-30
+Features: 2-grams (Bigrams) + Top 400 (Term Frequency)
+Score: 76.4%
+Test: 1.5s
+
+Experiment #22
+ML: SVM
+Testing: 70-30
+Features: 3-grams (Trigrams) + Top 400 (Term Frequency)
+Score: 76.1%
+Test: 1.54s
+
+Experiment #23
+ML: SVM
+Testing: 70-30
+Features: 2-grams (Bigrams)
+Score:
+Test:
+
+Experiment #24
+ML: SVM
+Testing: 70-30
+Features: 3-grams (Trigrams) 
+Score:
+Test:
+
+==== SVM ENDED ====
+
+ON THE NEXT EPISODE OF ML: Logistic Regression, Decision Trees, More cleaning, NLP Techniques
