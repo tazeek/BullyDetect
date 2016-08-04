@@ -76,7 +76,7 @@ for i in range(len(train_df)):
 # 	clean_file.write(comment + "\n")
 # print("WRITING TO FILE COMPLETE")
 
-#Implement Bag-Of-Words
+#Implement Bag-Of-Words/N-grams
 vectorizer = CountVectorizer(analyzer="word", ngram_range=(3, 3))
 data_features_train = vectorizer.fit_transform(clean_comments_train)
 data_features_train = data_features_train.toarray()
@@ -87,12 +87,12 @@ data_features_train = data_features_train.toarray()
 # data_features_train = data_features_train.toarray()
 
 #Implement Random Forest ML
-forest = RandomForestClassifier(n_estimators = 100)
-forest = forest.fit( data_features_train, train_df["Insult"] )
+# forest = RandomForestClassifier(n_estimators = 100)
+# forest = forest.fit( data_features_train, train_df["Insult"] )
 
 #Implement Naive-Bayes Classifier
-# nb = GaussianNB()
-# nb.fit( data_features_train, train_df["Insult"] )
+nb = GaussianNB()
+nb.fit( data_features_train, train_df["Insult"] )
 
 #Implement SVM Classifier
 # model = SVC(kernel='linear')
@@ -112,8 +112,8 @@ data_features_test = data_features_test.toarray()
 
 start_time = time.time()
 
-result = forest.predict(data_features_test)
-#result = nb.predict(data_features_test)
+#result = forest.predict(data_features_test)
+result = nb.predict(data_features_test)
 #result = model.predict(data_features_test)
 
 end_time = time.time()

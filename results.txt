@@ -61,3 +61,63 @@ Testing: 70-30
 Features: 3-grams (Trigrams) 
 Score: 77.92%  
 Time: 3.97s
+
+====RANDOM FOREST DONE====
+
+Experiment #9
+ML: Naive-Bayes
+Testing: 70-30 
+Features: Bag-of-Words
+Score: 67.91%
+Time: 0.74s
+
+Experiment #10 
+ML: Naive-Bayes
+Testing: 70-30
+Features: 2-grams (Bigrams)
+Score: 71.20%
+Time: 3.73s
+
+Experiment #11 
+ML: Naive-Bayes
+Testing: 70-30
+Features: TF-IDF
+Score: 67.76%
+Time: 0.76s
+
+Experiment #12
+ML: Naive-Bayes
+Testing: 70-30 
+Features: Bag-of-Words + Top 400 (Term Frequency)
+Score: 49.77%
+Time: 0.02s
+
+Experiment #13
+ML: Naive-Bayes
+Testing: 70-30
+Features: 2-grams (Bigrams) + Top 400 (Term Frequency)
+Score: 49.42%
+Time: 0.02s
+
+Experiment #14
+ML: Naive-Bayes
+Testing: 70-30
+Features: 3-grams (Trigrams) + Top 400 (Term Frequency)
+Score: 33.35%
+Time: 0.02s
+
+Experiment #15 
+ML: Naive-Bayes
+Testing: 70-30
+Features: TF-IDF + Top 400 (Term Frequency)
+Score: 65.59% 
+Time: 0.02s
+
+Experiment #16
+ML: Naive-Bayes
+Testing: 70-30 
+Features: Trigrams + Top 400 (Term Frequency)
+Score: 60.03%
+Time: 5.65s
+
+==== NAIVE-BAYES DONE ====
