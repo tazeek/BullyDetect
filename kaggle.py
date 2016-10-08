@@ -3,13 +3,15 @@ import numpy as np
 import re
 import codecs
 import time
+import os
 
+from sklearn import cross_validation
 from bs4 import BeautifulSoup
 from contractions import contractions
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score
-from sklearn.naive_bayes import GaussianNB
+from sklearn.metrics import accuracy_score, recall_score, precision_score
+from sklearn.naive_bayes import GaussianNB, MultinomialNB
 from sklearn.svm import SVC
 
 def grammarContractions(original_text):
@@ -50,6 +52,48 @@ def cleaning(original_text):
 
 	return grammarContractions(text)
 
+#For Cross Validating and Evaluation of Model	
+def crossValidationTest(model, vectorizer, features, df):
+	cv = cross_validation.KFold(n=len(df), shuffle=False, n_folds=10)
+	features = np.asarray(features)
+
+	accuracy_array = []
+	precision_array = []
+	recall_array = []
+
+	for train_cv, test_cv in cv:
+		
+		#Use the K-Fold for Training set and Testing set
+		X_train, X_test = features[train_cv], features[test_cv]
+		y_train, y_test = df.iloc[train_cv]['Insult'], df.iloc[test_cv]['Insult']
+	
+		#Training set transformed and fitted
+		data_features_train = vectorizer.fit_transform(X_train)
+		data_features_train = data_features_train.toarray()
+		
+		#Model trained
+		model.fit(data_features_train, y_train)
+		
+		#Testing set transformed
+		data_features_test = vectorizer.transform(X_test)
+		data_features_test = data_features_test.toarray()
+		
+		#Predict results
+		result = model.predict(data_features_test)
+		
+		#Get accuracy
+		accuracy = accuracy_score(y_true=y_test, y_pred=result)
+		recall = recall_score(y_true=y_test, y_pred=result)
+		precision = precision_score(y_true=y_test, y_pred=result)
+		
+		accuracy_array.append(accuracy)
+		recall_array.append(recall)
+		precision_array.append(precision)
+
+	print("AVERAGE ACCURACY: ", round(np.average(accuracy_array)*100, 2))
+	print("AVERAGE RECALL: ", round(np.average(recall_array)*100, 2))
+	print("AVERAGE PRECISION: ", round(np.average(precision_array)*100, 2))
+
 clean_comments_train = []
 df = pd.read_csv("Kaggle/dataset.csv")
 
@@ -58,46 +102,38 @@ df.drop(df.index[[4,798,3127,6183,6347]], inplace=True)
 df.reset_index(inplace=True, drop=True)
 
 #Split Training and Testing Set
-train_df = df.iloc[:4610]
-test_df = df.iloc[4610:]
-
-#Rest the index of the test set
-test_df.reset_index(inplace=True, drop=True)
-
-#comment = 'P.S. And drop that loser Suzy.\xa0 You are a LOSER and a trouble maker.\xa0 Exit stage left, and go get a job.\xa0 It is a RAP!!!!!'
+train_df = df.iloc[:3900]
 
 for i in range(len(train_df)): 
 	clean_comment = cleaning(df['Comment'][i])
 	clean_comments_train.append(clean_comment)
 
-# clean_file = open('clean2.txt', 'w')
+#Rest the index of the test set
 
-# for comment in clean_comments:
-# 	clean_file.write(comment + "\n")
-# print("WRITING TO FILE COMPLETE")
 
-#Implement Bag-Of-Words/N-grams
-vectorizer = CountVectorizer(analyzer="word", ngram_range=(3, 3), max_features = 400)
+#Implement Bag-Of-Words/N-grams/TF-IDF
+vectorizer = CountVectorizer(analyzer="word", ngram_range=(3, 3))
+#vectorizer = TfidfVectorizer(stop_words='english')
+
+#Implement Classifier here
+#model = MultinomialNB()
+#model = RandomForestClassifier(n_estimators=100)
+model = SVC(kernel='linear')
+
+#crossValidationTest(model, vectorizer, clean_comments_train, train_df)
+#exit()
+
 data_features_train = vectorizer.fit_transform(clean_comments_train)
 data_features_train = data_features_train.toarray()
 
-#Implement TF-IDF Vectorizer
-# tf_idf = TfidfVectorizer()
-# data_features_train = tf_idf.fit_transform(clean_comments_train)
-# data_features_train = data_features_train.toarray()
-
-#Implement Random Forest ML
-# forest = RandomForestClassifier(n_estimators = 100)
-# forest = forest.fit( data_features_train, train_df["Insult"] )
-
-#Implement Naive-Bayes Classifier
-# nb = GaussianNB()
-# nb.fit( data_features_train, train_df["Insult"] )
+model.fit(data_features_train, train_df['Insult'])
 
 #Implement SVM Classifier
-model = SVC(kernel='linear')
-model.fit( data_features_train, train_df["Insult"] )
+#model = SVC(kernel='linear')
+#model.fit( data_features_train, train_df["Insult"] )
 
+test_df = df.iloc[3900:]
+test_df.reset_index(inplace=True, drop=True)
 
 clean_comments_test = []
 for i in range(len(test_df)):
@@ -108,24 +144,17 @@ for i in range(len(test_df)):
 data_features_test = vectorizer.transform(clean_comments_test)
 data_features_test = data_features_test.toarray()
 
-#MACHINE LEARNING PREDICTION
-
-start_time = time.time()
-
-#result = forest.predict(data_features_test)
-#result = nb.predict(data_features_test)
 result = model.predict(data_features_test)
-
-end_time = time.time()
-
-duration = round(end_time - start_time, 2)
-
 
 test_labels = test_df.as_matrix(columns=['Insult'])
 
-score = accuracy_score(y_true=test_df['Insult'], y_pred=result)
-print("SCORE: ", round(score*100, 2))
-print("TIME TAKEN: ", duration)
+accuracy = accuracy_score(y_true=test_df['Insult'], y_pred=result)
+recall = recall_score(y_true=test_df['Insult'], y_pred=result)
+precision = precision_score(y_true=test_df['Insult'], y_pred=result)
+
+print("TEST ACCURACY: ", round(accuracy*100, 2))
+print("TEST RECALL: ", round(recall*100, 2))
+print("TEST PRECISION: ", round(precision*100, 2))
 
 # ACCURACY SCORE
 # ==============
