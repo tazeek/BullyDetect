@@ -21,12 +21,14 @@ month = db['january'] # Collection is stored according to month
 
 # LIBRARIES RELATED FUNCTION (END)
 
-total_comments = 0
-total_sentences = 0
 total_words = 0
+total_sentences = 0
+total_comments = 0
 
 # Function to preprocess a sentence into list of words
 def convertToWords(sentence):
+
+    global total_words
 
     #Extract properly as in HTML
     sentence = BeautifulSoup(sentence, "lxml").get_text()
@@ -46,10 +48,17 @@ def convertToWords(sentence):
     # Rejoin words and then split again (Issues were contractions are treated as a single word)
     words = " ".join(words).split()
 
+    # Add total number of words to total_words variable
+    total_words += len(words)
+
+    print(words)
+
     return words
 
 # Function to split a comment into its respective sentence(s)
 def convertToSentence(review):
+
+    global total_sentences
 
     #1. Split into sentences
     raw_sentences = tokenizer.tokenize(review.strip())
@@ -59,6 +68,10 @@ def convertToSentence(review):
 
     for raw_sentence in raw_sentences:
         if len(raw_sentence) > 0: sentences.append(convertToWords(raw_sentence))
+
+    
+    # Add to total_sentences variable
+    total_sentences += len(sentences)
 
     return sentences
 
@@ -75,13 +88,10 @@ def isEnglish(s):
 # Function to store the sentences into MongoDB
 def storeComments(comment_list, fragment_number):
 
-    #global total
     reddit_words = []
 
     for sentence in comment_list:
         reddit_words += convertToSentence(sentence)
-
-    #total = total + len(reddit_words)
 
     dic = { 'fragment_number': fragment_number, 'sentence_list': reddit_words }
 
@@ -98,7 +108,6 @@ def collectComments():
     valid_count = 0
     fragment_number = 1
     valid_comments = []
-	global total_comments
 	
     # Removed comments in reddit have the form '[deleted]'
     deleted = "[deleted]"
@@ -111,7 +120,7 @@ def collectComments():
 
             valid_count += 1
             valid_comments.append(comment_str)
-			total_comments += 1
+            total_comments += 1
 
 
         # One fragment = 25,000 COMMENTS
@@ -131,8 +140,8 @@ def collectComments():
 
     return
 
-
-collectComments()
+convertToSentence("Super Saiyan Son Goku. Super Saiyan Vegeta. Super Namek Piccolo")
+#collectComments()
 print("TOTAL COMMENTS: ", total_comments)
 print("TOTAL SENTENCES: ", total_sentences)
 print("TOTAL WORDS: ", total_words)
