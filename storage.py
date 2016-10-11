@@ -7,7 +7,6 @@ import gc
 import sys
 import bz2
 import ujson
-import numpy as np
 import nltk.data
 
 # LIBRARIES RELATED FUNCTION (START)
@@ -22,7 +21,9 @@ month = db['january'] # Collection is stored according to month
 
 # LIBRARIES RELATED FUNCTION (END)
 
-#total = 0
+total_comments = 0
+total_sentences = 0
+total_words = 0
 
 # Function to preprocess a sentence into list of words
 def convertToWords(sentence):
@@ -97,7 +98,8 @@ def collectComments():
     valid_count = 0
     fragment_number = 1
     valid_comments = []
-
+	global total_comments
+	
     # Removed comments in reddit have the form '[deleted]'
     deleted = "[deleted]"
 
@@ -109,6 +111,7 @@ def collectComments():
 
             valid_count += 1
             valid_comments.append(comment_str)
+			total_comments += 1
 
 
         # One fragment = 25,000 COMMENTS
@@ -123,23 +126,22 @@ def collectComments():
             valid_count = 0
             valid_comments = []
 
-        if fragment_number == 800:
-            break
-
     # The last remaining comments needs to be stored
-    #storeComments(valid_comments, fragment_number)
+    storeComments(valid_comments, fragment_number)
 
     return
 
 
 collectComments()
-#print("TOTAL SENTENCES: ", total_comments)
+print("TOTAL COMMENTS: ", total_comments)
+print("TOTAL SENTENCES: ", total_sentences)
+print("TOTAL WORDS: ", total_words)
 
 # MONGODB Path
-# mongod --dbpath C:\Users\MyPC\Documents\data\db
+# mongod --dbpath "E:\tazeek\Final Year Project\data\db"
 
 # MONGODB File Path
-# cd C:\Program Files\MongoDB\Server\3.2\bin
+# cd "C:\Program Files\MongoDB\Server\3.2\bin"
 
 # MOVIES TO WATCH:
 # A Chinese Odyssey, Flirting Scholar, Red Cliff, I not stupid, A World Without Thieves, Curse of the Golden Flower

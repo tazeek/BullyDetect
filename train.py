@@ -26,7 +26,7 @@ class MySentences():
 
 
 
-word_list = MySentences()
+word_list = MySentences(500)
 
 print("DATA LOADED SUCCESSFULLY.....\n\n")
 
