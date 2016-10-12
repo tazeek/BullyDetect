@@ -16,8 +16,8 @@ tokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
 client = MongoClient() # Create client
 db = client['reddit'] # Database is 'Reddit'
 
-REDDIT_FILE = "RC_2015-01.bz2"
-month = db['january'] # Collection is stored according to month
+REDDIT_FILE = "RC_2015-02.bz2"
+month = db['february'] # Collection is stored according to month
 
 # LIBRARIES RELATED FUNCTION (END)
 
@@ -50,8 +50,6 @@ def convertToWords(sentence):
 
     # Add total number of words to total_words variable
     total_words += len(words)
-
-    print(words)
 
     return words
 
@@ -104,6 +102,7 @@ def storeComments(comment_list, fragment_number):
 def collectComments():
 
     extract_reddit = bz2.BZ2File(REDDIT_FILE)
+    global total_comments
 
     valid_count = 0
     fragment_number = 1
@@ -140,8 +139,8 @@ def collectComments():
 
     return
 
-convertToSentence("Super Saiyan Son Goku. Super Saiyan Vegeta. Super Namek Piccolo")
-#collectComments()
+#convertToSentence("Super Saiyan Son Goku. Super Saiyan Vegeta")
+collectComments()
 print("TOTAL COMMENTS: ", total_comments)
 print("TOTAL SENTENCES: ", total_sentences)
 print("TOTAL WORDS: ", total_words)
