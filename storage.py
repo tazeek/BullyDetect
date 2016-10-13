@@ -7,6 +7,7 @@ import gc
 import sys
 import bz2
 import ujson
+import time
 import nltk.data
 
 # LIBRARIES RELATED FUNCTION (START)
@@ -125,16 +126,21 @@ def collectComments():
         # One fragment = 25,000 COMMENTS
         if valid_count == 25000:
 
-            print("STORING FRAGMENT NUMBER ", fragment_number,"........\n\n")
+            print("STORING FRAGMENT NUMBER ", fragment_number)
 
+            start = time.time()
             storeComments(valid_comments, fragment_number)
+            duration = time.time() - start 
 
+            print("TIME TAKEN: ", duration, " seconds\n\n")
+            
             # Restart the storing process
             fragment_number += 1
             valid_count = 0
             valid_comments = []
 
     # The last remaining comments needs to be stored
+    print("STORING FRAGMENT NUMBER ", fragment_number,"........\n\n")
     storeComments(valid_comments, fragment_number)
 
     return
