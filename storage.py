@@ -132,15 +132,16 @@ def collectComments():
             storeComments(valid_comments, fragment_number)
             duration = time.time() - start 
 
-            print("TIME TAKEN: ", duration, " seconds\n\n")
-            
+            print("TIME TAKEN: ", duration, " seconds")
+            print("COMMENTS READ: ", fragment_number * valid_count,"\n\n")
+
             # Restart the storing process
             fragment_number += 1
             valid_count = 0
             valid_comments = []
 
     # The last remaining comments needs to be stored
-    print("STORING FRAGMENT NUMBER ", fragment_number,"........\n\n")
+    print("STORING FRAGMENT NUMBER ", fragment_number)
     storeComments(valid_comments, fragment_number)
 
     return
