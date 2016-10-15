@@ -17,8 +17,8 @@ tokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
 client = MongoClient() # Create client
 db = client['reddit'] # Database is 'Reddit'
 
-REDDIT_FILE = "RC_2015-04.bz2"
-month = db['april'] # Collection is stored according to month
+REDDIT_FILE = "RC_2015-05.bz2"
+month = db['may'] # Collection is stored according to month
 
 # LIBRARIES RELATED FUNCTION (END)
 
