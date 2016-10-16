@@ -124,7 +124,7 @@ def collectComments():
 
 
         # One fragment = 25,000 COMMENTS
-        if valid_count == 25000:
+        if valid_count == 20000:
 
             print("STORING FRAGMENT NUMBER ", fragment_number)
 
