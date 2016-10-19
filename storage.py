@@ -17,7 +17,7 @@ client = MongoClient() # Create client
 db = client['reddit'] # Database is 'Reddit'
 
 REDDIT_FILE = "RC_2015-01.bz2"
-month = db['january'] # Collection is stored according to month
+month = db['full'] # Collection is stored according to month
 
 # LIBRARIES RELATED FUNCTION (END)
 
@@ -102,6 +102,9 @@ def storeComments(comment_list, fragment_number):
 
 # Function to collect comments from the respective bz2 file
 def collectComments():
+
+    # Array to store all the file names
+    files_array = ["RC_2015-01.bz2","RC_2015-02.bz2","RC_2015-03.bz2","RC_2015-04.bz2","RC_2015-05.bz2"]
 
     extract_reddit = bz2.BZ2File(REDDIT_FILE)
 
