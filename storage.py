@@ -38,6 +38,9 @@ def convertToWords(sentence):
     #Remove URLs
     clean_sentence = re.sub(r'\w+:\/\/\S+', ' ', clean_sentence)
 
+    # Word Standardizing (Ex. Loooooll should Looll)
+    clean_sentence = ''.join(''.join(s)[:2] for _, s in itertools.groupby(clean_sentence))
+
     # Split attached words (Ex. AwesomeDisplay should be Awesome Display)
     clean_sentence =  " ".join(re.findall("[A-Z][^A-Z]*", clean_sentence))
 
