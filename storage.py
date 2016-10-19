@@ -38,6 +38,9 @@ def convertToWords(sentence):
     #Remove URLs
     clean_sentence = re.sub(r'\w+:\/\/\S+', ' ', clean_sentence)
 
+    # Split attached words (Ex. AwesomeDisplay should be Awesome Display)
+    clean_sentence =  " ".join(re.findall("[A-Z][^A-Z]*", clean_sentence))
+
     #Convert words to lower case and split them
     words = clean_sentence.lower().split()
 
