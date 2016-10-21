@@ -9,6 +9,7 @@ import bz2
 import ujson
 import time
 import nltk.data
+import itertools
 
 # LIBRARIES RELATED FUNCTION (START)
 
@@ -73,7 +74,7 @@ def convertToSentence(review):
         if len(raw_sentence) > 0: sentences.append(convertToWords(raw_sentence))
 
     # Remove blank arrays
-    sentences =[ sentence for sentence in sentence if '' not in sentence]
+    sentences =[ sentence for sentence in sentences if '' not in sentence]
 
     
     # Add to total_sentences variable
@@ -136,8 +137,8 @@ def collectComments():
                 total_comments += 1
 
 
-            # One fragment = 20,000 COMMENTS
-            if valid_count == 20000:
+            # One fragment = 10,000 COMMENTS
+            if valid_count == 10000:
 
                 print("STORING FRAGMENT NUMBER ", fragment_number)
 
@@ -146,7 +147,8 @@ def collectComments():
                 duration = time.time() - start 
 
                 print("TIME TAKEN: ", duration, " seconds")
-                print("COMMENTS READ: ", fragment_number * valid_count,"\n\n")
+                print("COMMENTS READ: ", fragment_number * valid_count)
+                print("CURRENT FILE:", file,"\n\n")
 
                 # Restart the storing process
                 fragment_number += 1
