@@ -16,7 +16,7 @@ class MySentences():
 
 		client = MongoClient() # First: Connect to MongoDB
 		db = client['reddit'] # Second: Connect to Database
-		collection = db['january'] # Third: Get the collections
+		collection_list = db.collection_names() # Third: Get the collections
 
 
 		for fragments in collection.find({"fragment_number": { "$lte" : self.fragments }}):

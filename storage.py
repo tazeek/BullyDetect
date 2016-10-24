@@ -4,7 +4,6 @@ from pymongo import MongoClient
 
 import re
 import gc
-import sys
 import bz2
 import ujson
 import time
@@ -17,7 +16,7 @@ tokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
 
 client = MongoClient() # Create client
 db = client['reddit'] # Database is 'Reddit'
-month = db['full'] # Collection is stored according to month
+month = db['may'] # Collection is stored according to month
 
 # LIBRARIES RELATED FUNCTION (END)
 
@@ -33,13 +32,15 @@ def convertToWords(sentence):
     #Extract properly as in HTML
     sentence = BeautifulSoup(sentence, "lxml").get_text()
 
-    #Remove non-alphanumeric
-    clean_sentence = re.sub("[^a-zA-Z']", " ", sentence)
-
     #Remove URLs
-    clean_sentence = re.sub(r'\w+:\/\/\S+', ' ', clean_sentence)
+    clean_sentence = re.sub(r'\w+:\/\/\S+', ' ', sentence)
 
-    # Word Standardizing (Ex. Loooooll should Looll)
+    #Remove non-alphanumeric
+    regex = re.compile('[^a-zA-Z\s]')
+    clean_sentence = regex.sub('', clean_sentence)
+    #clean_sentence = re.sub("[^a-zA-Z']", " ", clean_sentence)
+
+    # Word Standardizing (Ex. Looooolll should be Looll)
     clean_sentence = ''.join(''.join(s)[:2] for _, s in itertools.groupby(clean_sentence))
 
     # Split attached words (Ex. AwesomeDisplay should be Awesome Display)
@@ -71,10 +72,15 @@ def convertToSentence(review):
     sentences = []
 
     for raw_sentence in raw_sentences:
-        if len(raw_sentence) > 0: sentences.append(convertToWords(raw_sentence))
 
-    # Remove blank arrays
-    sentences =[ sentence for sentence in sentences if '' not in sentence]
+        if len(raw_sentence) > 0: 
+
+            # Get word list
+            word_list = convertToWords(raw_sentence)
+
+            # Append word list if not an empty string
+            if len(word_list) > 0:
+                sentences.append(word_list)
 
     
     # Add to total_sentences variable
@@ -113,7 +119,7 @@ def collectComments():
     global total_comments
 
     # Reddit Files' names
-    reddit_files = ["RC_2015-01.bz2","RC_2015-02.bz2","RC_2015-03.bz2","RC_2015-04.bz2","RC_2015-05.bz2"]
+    file = "RC_2015-05.bz2"
 
     # Comments related
     valid_count = 0
@@ -122,38 +128,37 @@ def collectComments():
     deleted = "[deleted]"
 
     # Looping starts
-    for file in (reddit_files):
 
-        extract_reddit = bz2.BZ2File(file)
+    extract_reddit = bz2.BZ2File(file)
 
-        for line in extract_reddit:
+    for line in extract_reddit:
 
-            comment_str = ujson.loads(line)['body']
+        comment_str = ujson.loads(line)['body']
 
-            if isEnglish(comment_str) and comment_str != deleted and len(comment_str) != 0:
+        if isEnglish(comment_str) and comment_str != deleted and len(comment_str) != 0:
 
-                valid_count += 1
-                valid_comments.append(comment_str)
-                total_comments += 1
+            valid_count += 1
+            valid_comments.append(comment_str)
+            total_comments += 1
 
 
-            # One fragment = 10,000 COMMENTS
-            if valid_count == 10000:
+        # One fragment = 10,000 COMMENTS
+        if valid_count == 10000:
 
-                print("STORING FRAGMENT NUMBER ", fragment_number)
+            print("STORING FRAGMENT NUMBER ", fragment_number)
 
-                start = time.time()
-                storeComments(valid_comments, fragment_number)
-                duration = time.time() - start 
+            start = time.time()
+            storeComments(valid_comments, fragment_number)
+            duration = time.time() - start 
 
-                print("TIME TAKEN: ", duration, " seconds")
-                print("COMMENTS READ: ", fragment_number * valid_count)
-                print("CURRENT FILE:", file,"\n\n")
+            print("TIME TAKEN: ", duration, " seconds")
+            print("COMMENTS READ: ", fragment_number * valid_count)
+            print("CURRENT FILE:", file,"\n\n")
 
-                # Restart the storing process
-                fragment_number += 1
-                valid_count = 0
-                valid_comments = []
+            # Restart the storing process
+            fragment_number += 1
+            valid_count = 0
+            valid_comments = []
 
     # The last remaining comments needs to be stored
     print("STORING FRAGMENT NUMBER ", fragment_number)
