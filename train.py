@@ -16,10 +16,10 @@ class MySentences():
 
 		client = MongoClient() # First: Connect to MongoDB
 		db = client['reddit'] # Second: Connect to Database
-		collection_list = db.collection_names() # Third: Get the collections
+		collection = db['jan'] # Third: Get the collections
 
 
-		for fragments in collection.find({"fragment_number": { "$lte" : self.fragments }}):
+		for fragments in collection.find():
 
 			for sentence in fragments['sentence_list']:
 				yield sentence
@@ -50,7 +50,7 @@ iter = 5 # Iterations over corpus. Also called epochs
 #Word2Vec Parameters (END)
 
 #Initialize Bigram Transformer
-#bigram_transformer = Phrases(word_list, delimiter= b' ')
+bigram_transformer = Phrases(word_list, delimiter= b' ')
 
 os.system('cls')
 
