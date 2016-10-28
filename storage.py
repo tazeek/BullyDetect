@@ -36,9 +36,7 @@ def convertToWords(sentence):
     clean_sentence = re.sub(r'\w+:\/\/\S+', ' ', sentence)
 
     #Remove non-alphanumeric
-    regex = re.compile('[^a-zA-Z\s]')
-    clean_sentence = regex.sub('', clean_sentence)
-    #clean_sentence = re.sub("[^a-zA-Z']", " ", clean_sentence)
+    clean_sentence = re.sub("[^a-zA-Z']", " ", clean_sentence)
 
     # Word Standardizing (Ex. Looooolll should be Looll)
     clean_sentence = ''.join(''.join(s)[:2] for _, s in itertools.groupby(clean_sentence))
@@ -142,10 +140,10 @@ def collectComments():
             total_comments += 1
 
 
-        # One fragment = 10,000 COMMENTS
-        if valid_count == 10000:
+        # One fragment = 10,000 COMMENTS (May is 5000)
+        if valid_count == 5000:
 
-            print("STORING FRAGMENT NUMBER ", fragment_number)
+            print("STORING FRAGMENT NUMBER ", fragment_number, " / 10044")
 
             start = time.time()
             storeComments(valid_comments, fragment_number)
