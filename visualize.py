@@ -37,7 +37,7 @@ tsne = TSNE(n_components=2, random_state=0)
 np.set_printoptions(suppress=True)
 
 # Fit with 1000 words 
-Y = tsne.fit_transform(wv[:1000])
+Y = tsne.fit_transform(wv[100000:115000])
 
 # Use Scatterplot
 plt.scatter(Y[:, 0], Y[:, 1])

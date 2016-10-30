@@ -7,26 +7,29 @@ import os
 import time
 import numpy as np
 
-class MySentences():
+# Utilize the full power of the cores available
+os.system("taskset -p 0xff %d" % os.getpid())
 
-	def __init__(self, fragments=300):
-		self.fragments = fragments
+class MySentences():
 
 	def __iter__(self):
 
 		client = MongoClient() # First: Connect to MongoDB
 		db = client['reddit'] # Second: Connect to Database
-		collection = db['jan'] # Third: Get the collections
+		collection_list = ['jan'] # Third: Get collection list
+
+		for month in collection_list:
+			collection = db[month] # Third: Get the collections
 
 
-		for fragments in collection.find():
+			for fragments in collection.find():
 
-			for sentence in fragments['sentence_list']:
-				yield sentence
+				for sentence in fragments['sentence_list']:
+					yield sentence
 
 
 
-word_list = MySentences(500)
+word_list = MySentences()
 
 print("DATA LOADED SUCCESSFULLY.....\n\n")
 
@@ -41,13 +44,16 @@ window = 5 # Window of surrounding words
 alpha = 0.025 # Initial learning rate of the Neural Network
 min_count = 5 # Minimum Frequency of Words
 workers = multiprocessing.cpu_count() # Number of workers
-max_vocab_size = 1000000 # Number of Unique Words
+max_vocab_size = 3000000 # Number of Unique Words
 negative = 10 # Number of words to be drawn for Negative Sampling
-sample = 0.001 # Subsampling of frequent words 
+sample = 0.0001 # Subsampling of frequent words 
 hs = 0 # Negative Sampling to be used
 iter = 5 # Iterations over corpus. Also called epochs
 
 #Word2Vec Parameters (END)
+
+# WORD2VEC RAM FORMULA (IN GIGABYTES):
+# (Number of Unique Words x Dimension Size x 12)/1,000,000,000 
 
 #Initialize Bigram Transformer
 bigram_transformer = Phrases(word_list, delimiter= b' ')
@@ -55,7 +61,7 @@ bigram_transformer = Phrases(word_list, delimiter= b' ')
 os.system('cls')
 
 #Initialize Word2Vec model 
-model = Word2Vec(word_list, sg=sg, size=size, window=window, alpha=alpha, min_count=min_count, workers=workers, max_vocab_size=max_vocab_size, hs=hs, iter=iter, sample=sample)
+model = Word2Vec(bigram_transformer[word_list], sg=sg, size=size, window=window, alpha=alpha, min_count=min_count, workers=workers, max_vocab_size=max_vocab_size, hs=hs, iter=iter, sample=sample)
 model_name = "reddit"
 
 model.init_sims(replace=True) # Trim down memory size
