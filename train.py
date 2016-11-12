@@ -1,3 +1,4 @@
+#!python3
 from gensim.models import Word2Vec, Phrases
 from pymongo import MongoClient
 
@@ -7,7 +8,7 @@ import os
 import time
 import numpy as np
 
-# Utilize the full power of the cores available
+# Utilize the full power of the worker threads available
 os.system("taskset -p 0xff %d" % os.getpid())
 
 class MySentences():
@@ -44,7 +45,7 @@ window = 5 # Window of surrounding words
 alpha = 0.025 # Initial learning rate of the Neural Network
 min_count = 5 # Minimum Frequency of Words
 workers = multiprocessing.cpu_count() # Number of workers
-max_vocab_size = 8000000 # Number of Unique Words
+max_vocab_size = 10000000 # Maximum number of Unique Words
 negative = 10 # Number of words to be drawn for Negative Sampling
 sample = 0.001 # Subsampling of frequent words 
 hs = 0 # Negative Sampling to be used
@@ -53,16 +54,16 @@ iter = 5 # Iterations over corpus. Also called epochs
 #Word2Vec Parameters (END)
 
 # WORD2VEC RAM FORMULA (IN GIGABYTES):
-# (Number of Unique Words x Dimension Size x 12)/1,000,000,000 
+# (Estimated Number of Unique Words x Dimension Size x 12)/1,000,000,000 
 
 #Initialize Bigram Transformer
-bigram_transformer = Phrases(word_list)
+#bigram_transformer = Phrases(word_list)
 
 os.system('cls')
 
 #Initialize Word2Vec model 
-model = Word2Vec(bigram_transformer[word_list], sg=sg, size=size, window=window, alpha=alpha, min_count=min_count, workers=workers, max_vocab_size=max_vocab_size, hs=hs, iter=iter, sample=sample)
-model_name = "reddit_full_bi"
+model = Word2Vec(word_list, sg=sg, size=size, window=window, alpha=alpha, min_count=min_count, workers=workers, max_vocab_size=max_vocab_size, hs=hs, iter=iter, sample=sample)
+model_name = "reddit_full_UNI"
 
 model.init_sims(replace=True) # Trim down memory size
 model.save_word2vec_format(model_name + '.bin', binary=True) 
