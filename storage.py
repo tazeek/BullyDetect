@@ -16,7 +16,7 @@ tokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
 
 client = MongoClient() # Create client
 db = client['reddit'] # Database is 'Reddit'
-month = db['may'] # Collection is stored according to month
+month = db['full'] # Collection is stored according to month
 
 # LIBRARIES RELATED FUNCTION (END)
 
@@ -51,7 +51,7 @@ def convertToWords(sentence):
     words = " ".join(words)
 
     # Remove non-alphabets
-    words = re.sub("[^a-z]", " ", words)
+    words = re.sub("[^a-z\s]", "", words)
 
     # Split them one last time
     words = words.split()
@@ -147,7 +147,7 @@ def collectComments():
             # One fragment = 5,000 COMMENTS (May is 5000)
             if valid_count == 5000:
 
-                print("STORING FRAGMENT NUMBER ", fragment_number, " / 10044")
+                print("STORING FRAGMENT NUMBER ", fragment_number)
 
                 start = time.time()
                 storeComments(valid_comments, fragment_number)
