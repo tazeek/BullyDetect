@@ -17,7 +17,7 @@ class MySentences():
 
 		client = MongoClient() # First: Connect to MongoDB
 		db = client['reddit'] # Second: Connect to Database
-		collection = db['full'] # Third: Get collection list
+		collection = db['full_2'] # Third: Get collection list
 
 		for fragments in collection.find():
 			for sentence in fragments['sentence_list']:
@@ -49,7 +49,7 @@ window = 5 # Window of surrounding words
 alpha = 0.025 # Initial learning rate of the Neural Network
 min_count = 5 # Minimum Frequency of Words
 workers = multiprocessing.cpu_count() # Number of workers
-max_vocab_size = 10000000 # Maximum number of Unique Words
+max_vocab_size = 8000000 # Maximum number of Unique Words
 negative = 10 # Number of words to be drawn for Negative Sampling
 sample = 0.001 # Subsampling of frequent words 
 hs = 0 # Negative Sampling to be used
