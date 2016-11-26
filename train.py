@@ -67,7 +67,7 @@ os.system('cls')
 
 #Initialize Word2Vec model 
 model = Word2Vec(word_list, sg=sg, size=size, window=window, alpha=alpha, min_count=min_count, workers=workers, max_vocab_size=max_vocab_size, hs=hs, iter=iter, sample=sample)
-model_name = "reddit_full_UNI"
+model_name = "w2v_reddit_unigram_300d"
 
 model.init_sims(replace=True) # Trim down memory size
 model.save_word2vec_format(model_name + '.bin', binary=True) 
