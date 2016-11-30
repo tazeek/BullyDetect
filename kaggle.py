@@ -4,6 +4,7 @@ import re
 import codecs
 import time
 import os
+import itertools
 
 from sklearn import cross_validation
 from bs4 import BeautifulSoup
@@ -50,6 +51,9 @@ def cleaning(original_text):
 
 	#Remove urls
 	text = re.sub(r'\w+:\/\/\S+', ' ', text)
+
+	# Word Standardizing (Ex. Looooolll should be Looll)
+	text = ''.join(''.join(s)[:2] for _, s in itertools.groupby(text))
 
 	#Convert words to lower case
 	text = text.lower().split()
