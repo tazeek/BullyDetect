@@ -15,6 +15,7 @@ from sklearn.naive_bayes import GaussianNB, MultinomialNB
 from sklearn.svm import SVC
 
 def grammarContractions(original_text):
+
 	text = original_text.lower().split()
 	reformed = [contractions[word] if word in contractions else word for word in text]
 
@@ -24,7 +25,7 @@ def cleaning(original_text):
 
 	text = BeautifulSoup(original_text,"lxml").get_text()
 
-	#Encodings.....
+	# Remove Encodings
 	text = re.sub(r'\\\\', r'\\', text)
 	text = re.sub(r'\\x\w{2,2}',' ', text)
 	text = re.sub(r'\\u\w{4,4}', ' ', text)
@@ -50,7 +51,19 @@ def cleaning(original_text):
 	#Remove urls
 	text = re.sub(r'\w+:\/\/\S+', ' ', text)
 
-	return grammarContractions(text)
+	#Convert words to lower case
+	text = text.lower().split()
+
+	#Remove contractions by expansion of words
+	text = [contractions[word] if word in contractions else word for word in text]
+
+	#Rejoin words
+	text = " ".join(text)
+
+	#Remove non-alphabets
+	text = re.sub("[^a-z\s]", " ", text)
+
+	return " ".join(text.split())
 
 #For Cross Validating and Evaluation of Model	
 def crossValidationTest(model, vectorizer, features, df):
@@ -94,67 +107,88 @@ def crossValidationTest(model, vectorizer, features, df):
 	print("AVERAGE RECALL: ", round(np.average(recall_array)*100, 2))
 	print("AVERAGE PRECISION: ", round(np.average(precision_array)*100, 2))
 
-clean_comments_train = []
+
+#Read in the CSV file
 df = pd.read_csv("Kaggle/dataset.csv")
+
+# One array to store clean comments, the other to store indexes of empty comments
+clean_comments = []
+empty_comments = []
 
 #Drop Latin comments (Performed by manual Data Analysis)
 df.drop(df.index[[4,798,3127,6183,6347]], inplace=True)
 df.reset_index(inplace=True, drop=True)
 
 #Split Training and Testing Set
-train_df = df.iloc[:3900]
+#train_df = df.iloc[:3900]
 
-for i in range(len(train_df)): 
+for i in range(len(df)): 
 	clean_comment = cleaning(df['Comment'][i])
-	clean_comments_train.append(clean_comment)
+	# Add comment if it is not empty
+	if clean_comment != "":
+		clean_comments.append(clean_comment)
+	else:
+		empty_comments.append(i)
+
+
+
+# Drop columns of empty comments
+df.drop(df.index[empty_comments], inplace=True)
+df.reset_index(inplace=True, drop=True)
+
+# Create a new dataframe
+clean_df = pd.DataFrame(data={'Insult':df['Insult'], 'Comment': clean_comments})
+print("\n\n",len(clean_df))
+# Save the cleaned dataset
+clean_df.to_csv('clean_dataset.csv', index=False)
 
 #Rest the index of the test set
 
 
 #Implement Bag-Of-Words/N-grams/TF-IDF
-vectorizer = CountVectorizer(analyzer="word", ngram_range=(3, 3))
+#vectorizer = CountVectorizer(analyzer="word", ngram_range=(3, 3))
 #vectorizer = TfidfVectorizer(stop_words='english')
 
 #Implement Classifier here
 #model = MultinomialNB()
 #model = RandomForestClassifier(n_estimators=100)
-model = SVC(kernel='linear')
+#model = SVC(kernel='linear')
 
 #crossValidationTest(model, vectorizer, clean_comments_train, train_df)
 #exit()
 
-data_features_train = vectorizer.fit_transform(clean_comments_train)
-data_features_train = data_features_train.toarray()
+#data_features_train = vectorizer.fit_transform(clean_comments_train)
+#data_features_train = data_features_train.toarray()
 
-model.fit(data_features_train, train_df['Insult'])
+#model.fit(data_features_train, train_df['Insult'])
 
 #Implement SVM Classifier
 #model = SVC(kernel='linear')
 #model.fit( data_features_train, train_df["Insult"] )
 
-test_df = df.iloc[3900:]
-test_df.reset_index(inplace=True, drop=True)
+#test_df = df.iloc[3900:]
+#test_df.reset_index(inplace=True, drop=True)
 
-clean_comments_test = []
-for i in range(len(test_df)):
-	clean_comment = cleaning(test_df['Comment'][i])
-	clean_comments_test.append(clean_comment)
+#clean_comments_test = []
+#for i in range(len(test_df)):
+#	clean_comment = cleaning(test_df['Comment'][i])
+#	clean_comments_test.append(clean_comment)
 
 #data_features_test = tf_idf.transform(clean_comments_test)	
-data_features_test = vectorizer.transform(clean_comments_test)
-data_features_test = data_features_test.toarray()
+#data_features_test = vectorizer.transform(clean_comments_test)
+#data_features_test = data_features_test.toarray()
 
-result = model.predict(data_features_test)
+#result = model.predict(data_features_test)
 
-test_labels = test_df.as_matrix(columns=['Insult'])
+#test_labels = test_df.as_matrix(columns=['Insult'])
 
-accuracy = accuracy_score(y_true=test_df['Insult'], y_pred=result)
-recall = recall_score(y_true=test_df['Insult'], y_pred=result)
-precision = precision_score(y_true=test_df['Insult'], y_pred=result)
+#accuracy = accuracy_score(y_true=test_df['Insult'], y_pred=result)
+#recall = recall_score(y_true=test_df['Insult'], y_pred=result)
+#precision = precision_score(y_true=test_df['Insult'], y_pred=result)
 
-print("TEST ACCURACY: ", round(accuracy*100, 2))
-print("TEST RECALL: ", round(recall*100, 2))
-print("TEST PRECISION: ", round(precision*100, 2))
+#print("TEST ACCURACY: ", round(accuracy*100, 2))
+#print("TEST RECALL: ", round(recall*100, 2))
+#print("TEST PRECISION: ", round(precision*100, 2))
 
 # ACCURACY SCORE
 # ==============
