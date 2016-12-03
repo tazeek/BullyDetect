@@ -89,10 +89,10 @@ df = pd.read_csv('clean_dataset.csv')
 
 # Separate out comments and labels
 X , y = df['Comment'], df['Insult']
-split = 4200
+split = 3900
 
 # Split the sample or make your own sample
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=0)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.45, random_state=0)
 #X_train, y_train = df['Comment'][:split], df['Insult'][:split]
 #X_test, y_test = df['Comment'][split:], df['Insult'][split:]
 

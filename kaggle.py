@@ -154,9 +154,9 @@ clean_df.to_csv('clean_dataset.csv', index=False)
 #vectorizer = TfidfVectorizer(stop_words='english')
 
 #Implement Classifier here
-#model = MultinomialNB()
+#model = GaussianNB()
 #model = RandomForestClassifier(n_estimators=100)
-#model = SVC(kernel='linear')
+#model = LinearSVC()
 
 #crossValidationTest(model, vectorizer, clean_comments_train, train_df)
 #exit()
