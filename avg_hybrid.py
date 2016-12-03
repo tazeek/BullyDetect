@@ -76,7 +76,7 @@ def wordsAverage(word, model):
 	return avgWordsFeature
 
 # One of the kaggle tests 
-def makeFeatureVec(words, model, num_features):
+def makeFeatureVec(words, model, vector_dict, num_features):
 
 	# Pre-initialize an empty numpy array (for speed)
 	featureVec = np.zeros((num_features,),dtype="float32")
@@ -92,10 +92,10 @@ def makeFeatureVec(words, model, num_features):
 			nwords += 1.
 
 			# Get average of the word
-			avgWordFeature = wordsAverage(word, model)
+			#avgWordFeature = wordsAverage(word, model)
 
 			# Add to the vector
-			featureVec = np.add(featureVec,avgWordFeature)
+			featureVec = np.add(featureVec, vector_dict[word])
 
 	# Divide the result by the number of words to get the average
 	featureVec = np.divide(featureVec,nwords)
@@ -103,7 +103,7 @@ def makeFeatureVec(words, model, num_features):
 	return featureVec
 
 # One of the kaggle tests
-def getAvgFeatureVecs(comments, model, num_features):
+def getAvgFeatureVecs(comments, model, vector_dict, num_features):
 
 	# Initialize empty counter
 	counter = 0
@@ -118,7 +118,7 @@ def getAvgFeatureVecs(comments, model, num_features):
 			print("Review %d of %d " % (counter, len(comments)))
 
 		# Call function that gets the average vectors
-		reviewFeatureVecs[counter] = makeFeatureVec(comment, model, num_features)
+		reviewFeatureVecs[counter] = makeFeatureVec(comment, model, vector_dict, num_features)
 
 		# Increment counter
 		counter += 1
@@ -126,6 +126,30 @@ def getAvgFeatureVecs(comments, model, num_features):
 
 	return reviewFeatureVecs
 
+# Function to transform the unique words
+def createVectorDictionary(unique_words, model):
+
+	vector_dict = {}
+
+	# Loop word by word
+	for i, word in enumerate(unique_words):
+
+		# Status checking
+		if i % 100 == 0:
+			print("Word %d out of %d transformed" % (i, len(unique_words)))
+
+		# Check if word is in model
+		if word in model:
+
+			# Get the average feature
+			avgWordFeature = wordsAverage(word, model)
+
+			# Add to dictionary
+			vector_dict[word] = avgWordFeature
+
+	return vector_dict 
+
+# Function to get the unique words
 def getUniqueWords(comments):
 
 	unique_words = []
@@ -166,15 +190,17 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.45, random
 
 # Create the dictionary (200K vs 20K)
 print("CREATING WORD-TRANSFORMED DICTIONARY\n\n")
-vect_dict = createVectorDictionary(unique_words, model)
+vector_dict = createVectorDictionary(unique_words, model)
+print(len(vector_dict))
+
 exit()
 
 # Data Transformation
 print("TRANSFORMING TRAINING SET\n\n")
-X_train = getAvgFeatureVecs(X_train, model, 300)
+X_train = getAvgFeatureVecs(X_train, model, vector_dict, 300)
 
 print("TRANSFORMING TESTING SET\n\n")
-X_test = getAvgFeatureVecs(X_test , model, 300)
+X_test = getAvgFeatureVecs(X_test , model, vector_dict, 300)
 
 # Implement Classifier(s) here and store in dictionary
 nb = GaussianNB()
