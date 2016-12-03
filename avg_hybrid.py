@@ -2,16 +2,18 @@ import pandas as pd
 import numpy as np 
 import time
 import os
+import pickle
 
 from stop_words import get_stop_words
 
 from sklearn.naive_bayes import GaussianNB, MultinomialNB
 from sklearn.svm import LinearSVC
 from sklearn.ensemble import RandomForestClassifier
+from gensim.models import Word2Vec as w2v
 
 from sklearn.cross_validation import train_test_split
-from sklearn.metrics import accuracy_score, precision_score
-from gensim.models import Word2Vec as w2v 
+from sklearn.metrics import accuracy_score, precision_score 
+from sklearn.model_selection import cross_val_score
 
 # Stop-word list. Remove the last ten words
 #stop_words = get_stop_words('english')
@@ -113,10 +115,6 @@ def getAvgFeatureVecs(comments, model, vector_dict, num_features):
 
 	for comment in comments:
 
-		# Print a status message every 1000th review
-		if counter % 10 == 0:
-			print("Review %d of %d " % (counter, len(comments)))
-
 		# Call function that gets the average vectors
 		reviewFeatureVecs[counter] = makeFeatureVec(comment, model, vector_dict, num_features)
 
@@ -133,10 +131,6 @@ def createVectorDictionary(unique_words, model):
 
 	# Loop word by word
 	for i, word in enumerate(unique_words):
-
-		# Status checking
-		if i % 100 == 0:
-			print("Word %d out of %d transformed" % (i, len(unique_words)))
 
 		# Check if word is in model
 		if word in model:
@@ -179,28 +173,35 @@ X , y = df['Comment'], df['Insult']
 split = 3900
 
 # Get unique words
-print("GETTING UNIQUE WORDS LIST\n\n")
-unique_words = getUniqueWords(X)
+#print("GETTING UNIQUE WORDS LIST\n\n")
+#unique_words = getUniqueWords(X)
 
 # Split the sample or make your own sample
-print("SPLITTING DATA\n\n")
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.45, random_state=0)
+#print("SPLITTING DATA\n\n")
+#X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.5, random_state=0)
 #X_train, y_train = df['Comment'][:split], df['Insult'][:split]
 #X_test, y_test = df['Comment'][split:], df['Insult'][split:]
 
 # Create the dictionary (200K vs 20K)
-print("CREATING WORD-TRANSFORMED DICTIONARY\n\n")
-vector_dict = createVectorDictionary(unique_words, model)
-print(len(vector_dict))
+# After creating, save using pickle
+#print("CREATING WORD-TRANSFORMED DICTIONARY\n\n")
+#vector_dict = createVectorDictionary(unique_words, model)
 
-exit()
+#print("SAVING THE DICTIONARY")
+#pickle.dump(vector_dict, open("vect_dict.p", "wb"))
+
+# Load the dictionary
+print("LOADING DICTIONARY\n\n")
+vector_dict = pickle.load(open("vect_dict.p","rb"))
 
 # Data Transformation
-print("TRANSFORMING TRAINING SET\n\n")
-X_train = getAvgFeatureVecs(X_train, model, vector_dict, 300)
+#print("TRANSFORMING TRAINING SET\n\n")
+#X_train = getAvgFeatureVecs(X_train, model, vector_dict, 300)
 
-print("TRANSFORMING TESTING SET\n\n")
-X_test = getAvgFeatureVecs(X_test , model, vector_dict, 300)
+#print("TRANSFORMING TESTING SET\n\n")
+#X_test = getAvgFeatureVecs(X_test , model, vector_dict, 300)
+
+X = getAvgFeatureVecs(X, model, vector_dict, 300)
 
 # Implement Classifier(s) here and store in dictionary
 nb = GaussianNB()
@@ -211,4 +212,6 @@ models = { "Naive Bayes": nb, "Support Vector Machines": svm, "Random Forest": r
 
 print("TESTING  MODELS\n\n")
 for key, value in models.items():
-	testing(value, key, X_train, y_train, X_test, y_test)
+	#testing(value, key, X_train, y_train, X_test, y_test)
+	score = np.mean(cross_val_score(value, X, y, cv=10))
+	print(key," - ", score)
