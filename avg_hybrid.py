@@ -1,6 +1,7 @@
 import pandas as pd 
 import numpy as np 
 import time
+import os
 
 from stop_words import get_stop_words
 
@@ -16,6 +17,31 @@ from gensim.models import Word2Vec as w2v
 #stop_words = get_stop_words('english')
 #stop_words = stop_words[:(len(stop_words) - 9)]
 
+# The testing function
+def testing(model, model_name, X_train, y_train, X_test, y_test):
+
+	print(model_name + " STARTS HERE\n\n")
+
+	# Train the model
+	model.fit(X_train , y_train)
+
+	# Predict and calculate run-time
+	start = time.time()
+	result = model.predict(X_test)
+	end = time.time()
+
+	# Evaluation Metrics
+	accuracy = accuracy_score(y_true=y_test , y_pred=result)
+	precision = precision_score(y_true=y_test, y_pred=result)
+
+	# Display results
+	print("TEST ACCURACY: ", round(accuracy*100, 2))
+	print("TEST PRECISION: ", round(precision*100, 2))
+	print("RUN TIME: ", end - start)
+
+	print("\n\n" + model_name + " STOPS HERE\n\n")
+
+# Dr. Soon's idea 
 def wordsAverage(word, model):
 
 	# Pre-initialize an empty numpy array (for speed)
@@ -49,31 +75,7 @@ def wordsAverage(word, model):
 	# Return them
 	return avgWordsFeature
 
-
-def testing(model, model_name, X_train, y_train, X_test, y_test):
-
-	print(model_name + " STARTS HERE\n\n")
-
-	# Train the model
-	model.fit(X_train , y_train)
-
-	# Predict and calculate run-time
-	start = time.time()
-	result = model.predict(X_test)
-	end = time.time()
-
-	# Evaluation Metrics
-	accuracy = accuracy_score(y_true=y_test , y_pred=result)
-	precision = precision_score(y_true=y_test, y_pred=result)
-
-	# Display results
-	print("TEST ACCURACY: ", round(accuracy*100, 2))
-	print("TEST PRECISION: ", round(precision*100, 2))
-	print("RUN TIME: ", end - start)
-
-	print("\n\n" + model_name + " STOPS HERE\n\n")
-
-# One of the kaggle tests
+# One of the kaggle tests 
 def makeFeatureVec(words, model, num_features):
 
 	# Pre-initialize an empty numpy array (for speed)
@@ -88,7 +90,12 @@ def makeFeatureVec(words, model, num_features):
 
 		if word in model: #and word not in stop_words:
 			nwords += 1.
-			featureVec = np.add(featureVec,model[word])
+
+			# Get average of the word
+			avgWordFeature = wordsAverage(word, model)
+
+			# Add to the vector
+			featureVec = np.add(featureVec,avgWordFeature)
 
 	# Divide the result by the number of words to get the average
 	featureVec = np.divide(featureVec,nwords)
@@ -106,6 +113,10 @@ def getAvgFeatureVecs(comments, model, num_features):
 
 	for comment in comments:
 
+		# Print a status message every 1000th review
+       	if counter % 1000. == 0.:
+        	print("Review %d of %d" % (counter, len(comments)))
+
 		# Call function that gets the average vectors
 		reviewFeatureVecs[counter] = makeFeatureVec(comment, model, num_features)
 
@@ -115,7 +126,9 @@ def getAvgFeatureVecs(comments, model, num_features):
 
 	return reviewFeatureVecs
 
+os.system('cls')
 # Load Word2Vec model here
+print("LOADING WORD2VEC MODEL\n\n")
 model = w2v.load_word2vec_format('w2v_reddit_unigram_300d.bin', binary=True)
 
 # Load the dataset here
@@ -126,12 +139,16 @@ X , y = df['Comment'], df['Insult']
 split = 3900
 
 # Split the sample or make your own sample
+print("SPLITTING DATA\n\n")
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.45, random_state=0)
 #X_train, y_train = df['Comment'][:split], df['Insult'][:split]
 #X_test, y_test = df['Comment'][split:], df['Insult'][split:]
 
 # Data Transformation
+print("TRANSFORMING TRAINING SET\n\n")
 X_train = getAvgFeatureVecs(X_train, model, 300)
+
+print("TRANSFORMING TESTING SET\n\n")
 X_test = getAvgFeatureVecs(X_test , model, 300)
 
 # Implement Classifier(s) here and store in dictionary
@@ -141,5 +158,6 @@ svm = LinearSVC()
 
 models = { "Naive Bayes": nb, "Support Vector Machines": svm, "Random Forest": rf}
 
+print("TESTING  MODELS\n\n")
 for key, value in models.items():
 	testing(value, key, X_train, y_train, X_test, y_test)
