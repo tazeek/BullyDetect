@@ -114,8 +114,8 @@ def getAvgFeatureVecs(comments, model, num_features):
 	for comment in comments:
 
 		# Print a status message every 1000th review
-       	if counter % 1000. == 0.:
-        	print("Review %d of %d" % (counter, len(comments)))
+		if counter % 10 == 0:
+			print("Review %d of %d " % (counter, len(comments)))
 
 		# Call function that gets the average vectors
 		reviewFeatureVecs[counter] = makeFeatureVec(comment, model, num_features)
@@ -125,6 +125,22 @@ def getAvgFeatureVecs(comments, model, num_features):
 
 
 	return reviewFeatureVecs
+
+def getUniqueWords(comments):
+
+	unique_words = []
+
+	# Loop comment by comment
+	for comment in comments:
+
+		# Loop word by word
+		for word in comment.split():
+
+			# Append the word if not present
+			if word not in unique_words:
+				unique_words.append(word)
+
+	return unique_words
 
 os.system('cls')
 # Load Word2Vec model here
@@ -138,11 +154,20 @@ df = pd.read_csv('clean_dataset.csv')
 X , y = df['Comment'], df['Insult']
 split = 3900
 
+# Get unique words
+print("GETTING UNIQUE WORDS LIST\n\n")
+unique_words = getUniqueWords(X)
+
 # Split the sample or make your own sample
 print("SPLITTING DATA\n\n")
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.45, random_state=0)
 #X_train, y_train = df['Comment'][:split], df['Insult'][:split]
 #X_test, y_test = df['Comment'][split:], df['Insult'][split:]
+
+# Create the dictionary (200K vs 20K)
+print("CREATING WORD-TRANSFORMED DICTIONARY\n\n")
+vect_dict = createVectorDictionary(unique_words, model)
+exit()
 
 # Data Transformation
 print("TRANSFORMING TRAINING SET\n\n")
