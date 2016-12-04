@@ -1,6 +1,7 @@
 import pandas as pd 
 import numpy as np 
 import pickle
+import os
 
 from gensim.models import Word2Vec as w2v
 
@@ -13,7 +14,7 @@ def wordsAverage(word, model):
 
 	# Get words that are similar. This returns tuples in a list
 	# Topn refers to the Top N words. 10 is default
-	top_n = 10
+	top_n = 30
 
 	# Get words that are similar. This returns tuples in a list
 	similar_words = model.most_similar(word, topn=top_n)
@@ -45,6 +46,10 @@ def createVectorDictionary(unique_words, model):
 
 	# Loop word by word
 	for i, word in enumerate(unique_words):
+
+		# Status checker
+		if i % 100 == 0:
+			print("%d out of %d preprocessed" % (i, len(unique_words)))
 
 		# Check if word is in model
 		if word in model:
@@ -81,8 +86,9 @@ print("LOADING WORD2VEC MODEL\n\n")
 FILE = "W2V Models/w2v_reddit_unigram_300d.bin"
 model = w2v.load_word2vec_format(FILE, binary=True)
 
-# Load the dataset here
+# Load the dataset here and load comments
 df = pd.read_csv('clean_dataset.csv')
+X = df['Comment']
 
 # Get unique words
 print("GETTING UNIQUE WORDS LIST\n\n")
@@ -94,5 +100,5 @@ print("CREATING WORD-TRANSFORMED DICTIONARY\n\n")
 vector_dict = createVectorDictionary(unique_words, model)
 
 print("SAVING THE DICTIONARY")
-FILE = "Word Dictionary/vect_dict_10.p"
+FILE = "Word Dictionaries/vect_dict_30.p"
 pickle.dump(vector_dict, open(FILE, "wb"))
