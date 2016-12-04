@@ -113,7 +113,7 @@ def crossValidationTest(model, vectorizer, features, df):
 
 
 #Read in the CSV file
-df = pd.read_csv("Kaggle/dataset.csv")
+df = pd.read_csv("Kaggle/second dataset.csv")
 
 # One array to store clean comments, the other to store indexes of empty comments
 clean_comments = []
@@ -144,7 +144,7 @@ df.reset_index(inplace=True, drop=True)
 clean_df = pd.DataFrame(data={'Insult':df['Insult'], 'Comment': clean_comments})
 print("\n\n",len(clean_df))
 # Save the cleaned dataset
-clean_df.to_csv('clean_dataset.csv', index=False)
+clean_df.to_csv('second_clean_dataset.csv', index=False)
 
 #Rest the index of the test set
 
