@@ -12,7 +12,7 @@ from sklearn.ensemble import RandomForestClassifier
 from gensim.models import Word2Vec as w2v
 
 from sklearn.cross_validation import train_test_split
-from sklearn.metrics import accuracy_score, precision_score 
+from sklearn.metrics import accuracy_score, precision_score, confusion_matrix 
 from sklearn.model_selection import cross_val_score
 
 # Stop-word list. Remove the last ten words
@@ -35,10 +35,12 @@ def testing(model, model_name, X_train, y_train, X_test, y_test):
 	# Evaluation Metrics
 	accuracy = accuracy_score(y_true=y_test , y_pred=result)
 	precision = precision_score(y_true=y_test, y_pred=result)
+	cm = confusion_matrix(y_true=y_test, y_pred=result)
 
 	# Display results
 	print("TEST ACCURACY: ", round(accuracy*100, 2))
 	print("TEST PRECISION: ", round(precision*100, 2))
+	print("CONFUSION MATRIX: ", cm)
 	print("RUN TIME: ", end - start)
 
 	print("\n\n" + model_name + " STOPS HERE\n\n")
@@ -112,7 +114,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.35, random
 
 # Load the dictionary
 print("LOADING DICTIONARY\n\n")
-FILE = "Word Dictionaries/vect_dict_20.p"
+FILE = "Word Dictionaries/vect_dict_5.p"
 vector_dict = pickle.load(open(FILE,"rb"))
 
 # Data Transformation
