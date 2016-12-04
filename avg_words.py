@@ -30,15 +30,26 @@ def testing(model, model_name, X_train, y_train, X_test, y_test):
 	result = model.predict(X_test)
 	end = time.time()
 
-	# Evaluation Metrics
-	accuracy = accuracy_score(y_true=y_test , y_pred=result)
-	precision = precision_score(y_true=y_test, y_pred=result)
+	# Confusion Matrix
 	cm = confusion_matrix(y_true=y_test, y_pred=result)
 
+	tp = cm[1][1] # True positives
+	fp = cm[0][1] # False positives
+	tn = cm[0][0] # True negatives
+	fn = cm[1][0] # False negatives
+
+	# Evaluation Metrics
+	accuracy = accuracy_score(y_true=y_test , y_pred=result)
+	precision = tp/(tp+fp)
+	#precision = precision_score(y_true=y_test, y_pred=result)
+
 	# Display results
-	print("TEST ACCURACY: ", round(accuracy*100, 2))
-	print("TEST PRECISION: ", round(precision*100, 2))
-	print("CONFUSION MATRIX: ", cm)
+	print("ACCURACY: ", round(accuracy*100, 2))
+	print("PRECISION: ", round(precision*100, 2),"\n")
+	print("TRUE POSITIVES: ", tp)
+	print("FALSE POSITIVES:",fp,"\n")
+	print("TRUE NEGATIVES: ", tn)
+	print("FALSE NEGATIVES: ", fn,"\n")
 	print("RUN TIME: ", end - start)
 
 	print("\n\n" + model_name + " STOPS HERE\n\n")
@@ -98,7 +109,7 @@ X , y = df['Comment'], df['Insult']
 split = 3900
 
 # Split the sample or make your own sample
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.5, random_state=0)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.45, random_state=0)
 #X_train, y_train = df['Comment'][:split], df['Insult'][:split]
 #X_test, y_test = df['Comment'][split:], df['Insult'][split:]
 
