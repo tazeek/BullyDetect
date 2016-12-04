@@ -89,7 +89,7 @@ FILE = "W2V Models/w2v_reddit_unigram_300d.bin"
 model = w2v.load_word2vec_format(FILE, binary=True)
 
 # Load the dataset here
-df = pd.read_csv('clean_dataset.csv')
+df = pd.read_csv('second_clean_dataset.csv')
 
 # Separate out comments and labels
 X , y = df['Comment'], df['Insult']
@@ -113,6 +113,6 @@ svm = LinearSVC()
 models = { "Naive Bayes": nb, "Support Vector Machines": svm, "Random Forest": rf}
 
 for key, value in models.items():
-	#testing(value, key, X_train, y_train, X_test, y_test)
-	score = np.mean(cross_val_score(value, X, y, cv=10))
+	testing(value, key, X_train, y_train, X_test, y_test)
+	#score = np.mean(cross_val_score(value, X, y, cv=10))
 	print(key," - ", score)

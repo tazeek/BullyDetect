@@ -106,13 +106,13 @@ split = 3900
 
 # Split the sample or make your own sample
 print("SPLITTING DATA\n\n")
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.5, random_state=0)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.35, random_state=0)
 #X_train, y_train = df['Comment'][:split], df['Insult'][:split]
 #X_test, y_test = df['Comment'][split:], df['Insult'][split:]
 
 # Load the dictionary
 print("LOADING DICTIONARY\n\n")
-FILE = "Word Dictionary/vect_dict_10.p"
+FILE = "Word Dictionaries/vect_dict_20.p"
 vector_dict = pickle.load(open(FILE,"rb"))
 
 # Data Transformation
