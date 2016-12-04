@@ -94,4 +94,5 @@ print("CREATING WORD-TRANSFORMED DICTIONARY\n\n")
 vector_dict = createVectorDictionary(unique_words, model)
 
 print("SAVING THE DICTIONARY")
-pickle.dump(vector_dict, open("vect_dict.p", "wb"))
+FILE = "Word Dictionary/vect_dict_10.p"
+pickle.dump(vector_dict, open(FILE, "wb"))

@@ -112,7 +112,8 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.5, random_
 
 # Load the dictionary
 print("LOADING DICTIONARY\n\n")
-vector_dict = pickle.load(open("vect_dict.p","rb"))
+FILE = "Word Dictionary/vect_dict_10.p"
+vector_dict = pickle.load(open(FILE,"rb"))
 
 # Data Transformation
 print("TRANSFORMING TRAINING SET\n\n")
