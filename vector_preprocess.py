@@ -78,7 +78,8 @@ os.system('cls')
 
 # Load Word2Vec model here
 print("LOADING WORD2VEC MODEL\n\n")
-model = w2v.load_word2vec_format('w2v_reddit_unigram_300d.bin', binary=True)
+FILE = "W2V Models/w2v_reddit_unigram_300d.bin"
+model = w2v.load_word2vec_format(FILE, binary=True)
 
 # Load the dataset here
 df = pd.read_csv('clean_dataset.csv')
