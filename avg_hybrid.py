@@ -43,11 +43,16 @@ def testing(model, model_name, X_train, y_train, X_test, y_test):
 	# Evaluation Metrics
 	accuracy = accuracy_score(y_true=y_test , y_pred=result)
 	precision = tp/(tp+fp)
+	fdr = 1 - precision # False Discovery Rate
+	fpr = fp/(fp + tn) # False Positive Rate
+
 	#precision = precision_score(y_true=y_test, y_pred=result)
 
 	# Display results
 	print("ACCURACY: ", round(accuracy*100, 2))
-	print("PRECISION: ", round(precision*100, 2),"\n")
+	print("PRECISION: ", round(precision*100, 2))
+	print("FALSE DISCOVERY RATE: ", round(fdr*100, 2))
+	print("FALSE POSITIVE RATE: ", round(fpr*100, 2), "\n")
 	print("TRUE POSITIVES: ", tp)
 	print("FALSE POSITIVES:",fp,"\n")
 	print("TRUE NEGATIVES: ", tn)
@@ -119,13 +124,13 @@ split = 3900
 
 # Split the sample or make your own sample
 print("SPLITTING DATA\n\n")
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.65, random_state=0)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.5, random_state=0)
 #X_train, y_train = df['Comment'][:split], df['Insult'][:split]
 #X_test, y_test = df['Comment'][split:], df['Insult'][split:]
 
 # Load the dictionary
 print("LOADING DICTIONARY\n\n")
-FILE = "Word Dictionaries/vect_dict_5.p"
+FILE = "Word Dictionaries/vect_dict_20.p"
 vector_dict = pickle.load(open(FILE,"rb"))
 
 # Data Transformation
