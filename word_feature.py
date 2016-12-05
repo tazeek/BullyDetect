@@ -56,7 +56,7 @@ def testing(model, model_name, X_train, y_train, X_test, y_test):
 
 
 # Use each word as a feature
-def makeFeatureVec(comment, model, vector_dict, num_features):
+def makeFeatureVec(comment, model, num_features):
 
 	# Pre-initialize an empty numpy array (for speed)
 	featureVec = np.zeros((num_features,),dtype="float32")
@@ -81,7 +81,7 @@ def makeFeatureVec(comment, model, vector_dict, num_features):
 	return featureVec
 
 # One of the kaggle tests
-def commentFeatureVecs(comments, model, vector_dict, num_features):
+def commentFeatureVecs(comments, model, num_features):
 
 	# Initialize empty counter
 	counter = 0
@@ -123,7 +123,10 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.5, random_
 
 # Data Transformation (4th parameter indicates maximum words allowed)
 print("TRANSFORMING TRAINING SET\n\n")
-X_train = commentFeatureVecs(X_train, model, vector_dict, 50)
+X_train = commentFeatureVecs(X_train, model, 50)
 
 print("TRANSFORMING TESTING SET\n\n")
-X_test = commentFeatureVecs(X_test , model, vector_dict, 50)
+X_test = commentFeatureVecs(X_test , model, 50)
+
+# If successful till now, show message
+print("SUCCESS!")
