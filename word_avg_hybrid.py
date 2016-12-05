@@ -4,7 +4,7 @@ import time
 import os
 import pickle
 
-from sklearn.naive_bayes import GaussianNB, MultinomialNB
+from sklearn.naive_bayes import GaussianNB, BernoulliNB
 from sklearn.svm import LinearSVC
 from sklearn.ensemble import RandomForestClassifier
 from gensim.models import Word2Vec as w2v
@@ -137,7 +137,7 @@ print("TRANSFORMING TESTING SET\n\n")
 X_test = commentFeatureVecs(X_test , model, vect_dict, MAX_WORDS)
 
 # Implement Classifier(s) here and store in dictionary
-nb = GaussianNB()
+nb = BernoulliNB()
 rf = RandomForestClassifier(n_estimators=100)
 svm = LinearSVC()
 
