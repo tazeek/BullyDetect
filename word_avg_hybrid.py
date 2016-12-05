@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np 
 import time
 import os
+import pickle
 
 from sklearn.naive_bayes import GaussianNB, MultinomialNB
 from sklearn.svm import LinearSVC
@@ -56,7 +57,7 @@ def testing(model, model_name, X_train, y_train, X_test, y_test):
 
 
 # Use each word as a feature
-def makeFeatureVec(comment, model, num_features):
+def makeFeatureVec(comment, model, vect_dict, num_features):
 
 	# Pre-initialize an empty numpy array (for speed)
 	featureVec = np.zeros((num_features,),dtype="float32")
@@ -71,7 +72,7 @@ def makeFeatureVec(comment, model, num_features):
 		# If word is in model, return average of the word's feature vectors
 		# Else, return -1 which indicates no word found
 		if word in model:
-			word_feature = np.mean(model[word])
+			word_feature = np.mean(vect_dict[word])
 		else:
 			word_feature = -1.0
 
@@ -81,7 +82,7 @@ def makeFeatureVec(comment, model, num_features):
 	return featureVec
 
 # One of the kaggle tests
-def commentFeatureVecs(comments, model, num_features):
+def commentFeatureVecs(comments, model, vect_dict, num_features):
 
 	# Initialize empty counter
 	counter = 0
@@ -92,7 +93,7 @@ def commentFeatureVecs(comments, model, num_features):
 	for comment in comments:
 
 		# Call function that gets the average vectors
-		reviewFeatureVecs[counter] = makeFeatureVec(comment, model, num_features)
+		reviewFeatureVecs[counter] = makeFeatureVec(comment, model, vect_dict, num_features)
 
 		# Increment counter
 		counter += 1
@@ -121,14 +122,19 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.5, random_
 #X_train, y_train = df['Comment'][:split], df['Insult'][:split]
 #X_test, y_test = df['Comment'][split:], df['Insult'][split:]
 
+# Load the dictionary
+print("LOADING DICTIONARY\n\n")
+FILE = "Word Dictionaries/vect_dict_5.p"
+vect_dict = pickle.load(open(FILE,"rb"))
+
 # Data Transformation (4th parameter indicates maximum words allowed)
 MAX_WORDS = 500
 
 print("TRANSFORMING TRAINING SET\n\n")
-X_train = commentFeatureVecs(X_train, model, MAX_WORDS)
+X_train = commentFeatureVecs(X_train, model, vect_dict, MAX_WORDS)
 
 print("TRANSFORMING TESTING SET\n\n")
-X_test = commentFeatureVecs(X_test , model, MAX_WORDS)
+X_test = commentFeatureVecs(X_test , model, vect_dict, MAX_WORDS)
 
 # Implement Classifier(s) here and store in dictionary
 nb = GaussianNB()
