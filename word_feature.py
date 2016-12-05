@@ -62,10 +62,10 @@ def makeFeatureVec(comment, model, num_features):
 	featureVec = np.zeros((num_features,),dtype="float32")
 
 	# Loop word-by-word, as well as index
-	for i,word in enumerate(sentence.split()):
+	for i,word in enumerate(comment.split()):
 
 		# INCOMPLETE SENTENCE DETECTED
-		if i == len(sentenceWordFeature):
+		if i == len(featureVec):
 			break
 
 		# If word is in model, return average of the word's feature vectors
@@ -92,7 +92,7 @@ def commentFeatureVecs(comments, model, num_features):
 	for comment in comments:
 
 		# Call function that gets the average vectors
-		reviewFeatureVecs[counter] = makeFeatureVec(comment, model, vector_dict, num_features)
+		reviewFeatureVecs[counter] = makeFeatureVec(comment, model, num_features)
 
 		# Increment counter
 		counter += 1
