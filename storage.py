@@ -16,7 +16,7 @@ tokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
 
 client = MongoClient() # Create client
 db = client['reddit'] # Database is 'Reddit'
-month = db['full_2'] # Collection is stored according to month
+month = db['full_3'] # Collection is stored according to month
 
 # LIBRARIES RELATED FUNCTION (END)
 
@@ -39,7 +39,7 @@ def convertToWords(sentence):
     clean_sentence = ''.join(''.join(s)[:2] for _, s in itertools.groupby(clean_sentence))
 
     # Split attached words (Ex. AwesomeDisplay should be Awesome Display)
-    clean_sentence =  " ".join(re.findall("[A-Z][^A-Z]*", clean_sentence))
+    #clean_sentence =  " ".join(re.findall("[A-Z][^A-Z]*", clean_sentence))
 
     #Convert words to lower case and split them
     words = clean_sentence.lower().split()
