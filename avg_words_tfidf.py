@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np 
 import time
 import os
+import pickle
 
 from stop_words import get_stop_words
 from collections import defaultdict
@@ -70,7 +71,7 @@ def makeFeatureVec(words, model, tfidf_model, num_features):
 	nwords = 0.
 
 	# Loop over word by word
-	# If in vocabulary, add its feature vector to the total
+	# If in word2vec vocabulary, add its feature vector to the total
 	for word in words:
 
 		if word in model: #and word not in stop_words:
@@ -118,7 +119,8 @@ def getTFIDIF(FILE):
 	max_idf = max(tfidf_model.idf_)
 
 	# Transform the model into a dictionary 
-	tfidf_model = defaultdict(lambda: max_idf, [(w, tfidf.idf_[i]) for w, i in tfidf.vocabulary_.items()])
+	tfidf_model = defaultdict(lambda: max_idf, [(w, tfidf_model.idf_[i]) 
+		for w, i in tfidf_model.vocabulary_.items()])
 
 	return tfidf_model
 
@@ -131,7 +133,7 @@ model = w2v.load_word2vec_format(FILE, binary=True)
 # Load TF-IDF Model Here
 print("LOADING TFIDF DICTIONARY \n\n")
 FILE = "TFIDF models/tfidif_stop.pk"
-tfidf_stop = getTFIDIF(FILE)
+tfidf_model = getTFIDIF(FILE)
 
 # Load the dataset here
 print("LOADING DATASET \n\n")
@@ -150,7 +152,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.5, random_
 # Data Transformation
 print("TRANSFORMING DATA \n\n")
 #X = getAvgFeatureVecs(X, model, 300)
-X_train = getAvgFeatureVecs(X_train, model, tfidf_model 300)
+X_train = getAvgFeatureVecs(X_train, model, tfidf_model, 300)
 X_test  = getAvgFeatureVecs(X_test , model, tfidf_model, 300)
 
 # Implement Classifier(s) here and store in dictionary
