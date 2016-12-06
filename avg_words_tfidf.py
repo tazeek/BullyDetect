@@ -61,7 +61,7 @@ def testing(model, model_name, X_train, y_train, X_test, y_test):
 	print("\n\n" + model_name + " STOPS HERE\n\n")
 
 # One of the kaggle tests
-def makeFeatureVec(words, model, num_features):
+def makeFeatureVec(words, model, tfidf_model, num_features):
 
 	# Pre-initialize an empty numpy array (for speed)
 	featureVec = np.zeros((num_features,),dtype="float32")
@@ -75,7 +75,10 @@ def makeFeatureVec(words, model, num_features):
 
 		if word in model: #and word not in stop_words:
 			nwords += 1.
-			featureVec = np.add(featureVec,model[word])
+
+			# Transform the word feature
+			wordFeature = np.multiply(model[word], tfidf_model[word])
+			featureVec = np.add(featureVec,wordFeature)
 
 	# Divide the result by the number of words to get the average
 	featureVec = np.divide(featureVec,nwords)
@@ -83,7 +86,7 @@ def makeFeatureVec(words, model, num_features):
 	return featureVec
 
 # One of the kaggle tests
-def getAvgFeatureVecs(comments, model, num_features):
+def getAvgFeatureVecs(comments, model, tfidf_model, num_features):
 
 	# Initialize empty counter
 	counter = 0
@@ -94,7 +97,7 @@ def getAvgFeatureVecs(comments, model, num_features):
 	for comment in comments:
 
 		# Call function that gets the average vectors
-		reviewFeatureVecs[counter] = makeFeatureVec(comment, model, num_features)
+		reviewFeatureVecs[counter] = makeFeatureVec(comment, model, tfidf_model, num_features)
 
 		# Increment counter
 		counter += 1
@@ -145,10 +148,10 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.5, random_
 #X_test, y_test = df['Comment'][split:], df['Insult'][split:]
 
 # Data Transformation
-#X = getAvgFeatureVecs(X, model, 300)
 print("TRANSFORMING DATA \n\n")
-X_train = getAvgFeatureVecs(X_train, model, 300)
-X_test = getAvgFeatureVecs(X_test , model, 300)
+#X = getAvgFeatureVecs(X, model, 300)
+X_train = getAvgFeatureVecs(X_train, model, tfidf_model 300)
+X_test  = getAvgFeatureVecs(X_test , model, tfidf_model, 300)
 
 # Implement Classifier(s) here and store in dictionary
 print("INITIALIZING MODELS \n\n")
