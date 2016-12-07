@@ -73,8 +73,8 @@ def makeFeatureVec(comment, model, vect_dict, num_features):
 		# Else, return -1 which indicates no word found
 		if word in model:
 			word_feature = np.mean(vect_dict[word])
-		else:
-			word_feature = -1.0
+		#else:
+			#word_feature = -1.0
 
 		# Overwrite the sentence of the numpy array
 		featureVec[i] = word_feature
@@ -118,7 +118,7 @@ split = 3900
 
 # Split the sample or make your own sample
 print("SPLITTING DATA\n\n")
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.5, random_state=0)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.7, random_state=0)
 #X_train, y_train = df['Comment'][:split], df['Insult'][:split]
 #X_test, y_test = df['Comment'][split:], df['Insult'][split:]
 
@@ -137,7 +137,7 @@ print("TRANSFORMING TESTING SET\n\n")
 X_test = commentFeatureVecs(X_test , model, vect_dict, MAX_WORDS)
 
 # Implement Classifier(s) here and store in dictionary
-nb = BernoulliNB()
+nb = GaussianNB()
 rf = RandomForestClassifier(n_estimators=100)
 svm = LinearSVC()
 

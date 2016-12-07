@@ -117,12 +117,12 @@ split = 3900
 
 # Split the sample or make your own sample
 print("SPLITTING DATA\n\n")
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.5, random_state=0)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.35, random_state=0)
 #X_train, y_train = df['Comment'][:split], df['Insult'][:split]
 #X_test, y_test = df['Comment'][split:], df['Insult'][split:]
 
 # Data Transformation (4th parameter indicates maximum words allowed)
-MAX_WORDS = 500
+MAX_WORDS = 300
 
 print("TRANSFORMING TRAINING SET\n\n")
 X_train = commentFeatureVecs(X_train, model, MAX_WORDS)
