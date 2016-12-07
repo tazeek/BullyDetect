@@ -3,22 +3,15 @@ import numpy as np
 import time
 import os
 
-from stop_words import get_stop_words
-
 from sklearn.naive_bayes import GaussianNB, MultinomialNB
 from sklearn.svm import LinearSVC
 from sklearn.ensemble import RandomForestClassifier
 from gensim.models import Word2Vec as w2v 
 
-from sklearn.cross_validation import train_test_split
-from sklearn.metrics import accuracy_score, precision_score, confusion_matrix
-from sklearn.model_selection import cross_val_score
+from sklearn.cross_validation import train_test_split, KFold
+from sklearn.metrics import accuracy_score, confusion_matrix
 
-# Stop-word list. Remove the last ten words
-#stop_words = get_stop_words('english')
-#stop_words = stop_words[:(len(stop_words) - 9)]
-
-def testing(model, model_name, X_train, y_train, X_test, y_test):
+def testing(model, model_name, X, y, cv):
 
 	print(model_name + " STARTS HERE\n\n")
 
@@ -43,8 +36,6 @@ def testing(model, model_name, X_train, y_train, X_test, y_test):
 	precision = tp/(tp+fp)
 	fdr = 1 - precision # False Discovery Rate
 	fpr = fp/(fp + tn) # False Positive Rate
-
-	#precision = precision_score(y_true=y_test, y_pred=result)
 
 	# Display results
 	print("ACCURACY: ", round(accuracy*100, 2))
@@ -102,35 +93,46 @@ def getAvgFeatureVecs(comments, model, num_features):
 	return reviewFeatureVecs
 
 os.system('cls')
+
 # Load Word2Vec model here
+print("LOADING WORD2VEC MODEL \n\n")
 FILE = "W2V Models/w2v_reddit_unigram_300d.bin"
 model = w2v.load_word2vec_format(FILE, binary=True)
 
 # Load the dataset here
+print("LOADING DATASET \n\n")
 df = pd.read_csv('clean_dataset.csv')
 
 # Separate out comments and labels
 X , y = df['Comment'], df['Insult']
 split = 3900
 
-# Split the sample or make your own sample
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.5, random_state=0)
+# Transform the data
+print("TRANSFORMING DATA \n\n")
+X = getAvgFeatureVecs(X, model, 300)
+
+# Split the sample or make your own sample or skip
+#X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.5, random_state=0)
 #X_train, y_train = df['Comment'][:split], df['Insult'][:split]
 #X_test, y_test = df['Comment'][split:], df['Insult'][split:]
 
 # Data Transformation
 #X = getAvgFeatureVecs(X, model, 300)
-X_train = getAvgFeatureVecs(X_train, model, 300)
-X_test = getAvgFeatureVecs(X_test , model, 300)
+#X_train = getAvgFeatureVecs(X_train, model, 300)
+#X_test = getAvgFeatureVecs(X_test , model, 300)
 
 # Implement Classifier(s) here and store in dictionary
+print("INITLIAZING CLASSIFIERS \n\n")
 nb = GaussianNB()
 rf = RandomForestClassifier(n_estimators=100)
 svm = LinearSVC()
 
 models = { "Naive Bayes": nb, "Support Vector Machines": svm, "Random Forest": rf}
 
+
+# Test with 10 fold Cross validation
+print("TESTING WITH 10 FOLD CROSS VALIDATION \n\n")
+cv = KFold(n=len(X), shuffle=False, n_folds=10)
+
 for key, value in models.items():
-	testing(value, key, X_train, y_train, X_test, y_test)
-	#score = np.mean(cross_val_score(value, X, y, cv=10))
-	#print(key," - ", score)
+	testing(value, key, X, y, cv)
