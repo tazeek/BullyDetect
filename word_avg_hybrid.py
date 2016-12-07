@@ -98,8 +98,8 @@ def makeFeatureVec(comment, model, vect_dict, num_features):
 		# Else, return -1 which indicates no word found
 		if word in model:
 			word_feature = np.mean(vect_dict[word])
-		#else:
-			#word_feature = -1.0
+		else:
+			word_feature = -1.0
 
 		# Overwrite the sentence of the numpy array
 		featureVec[i] = word_feature
@@ -147,7 +147,7 @@ FILE = "Word Dictionaries/vect_dict_5.p"
 vect_dict = pickle.load(open(FILE,"rb"))
 
 # Transform the data
-MAX_WORDS = 500
+MAX_WORDS = 300
 X = commentFeatureVecs(X, model, vect_dict, MAX_WORDS)
 
 # Split the sample or make your own sample

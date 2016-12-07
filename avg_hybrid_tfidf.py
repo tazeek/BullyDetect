@@ -169,7 +169,7 @@ split = 3900
 
 # Load the dictionary
 print("LOADING INNOVATIVE DICTIONARY\n\n")
-FILE = "Word Dictionaries/vect_dict_20.p"
+FILE = "Word Dictionaries/vect_dict_5.p"
 vector_dict = pickle.load(open(FILE,"rb"))
 
 # Data Transformation
