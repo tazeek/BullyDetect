@@ -67,8 +67,12 @@ def testing(model, model_name, X, y, cv):
 	mean_fpr = np.mean(fpr_array)
 	mean_execution_time = np.mean(execution_time_array)
 
+	# Get standard deviation
+	std = np.std(accuracy_array)
+
 	# Display results
 	print("MEAN ACCURACY: ", round(mean_accuracy*100, 2))
+	print("STANDARD DEVIATION: +/-", std * 100)
 	print("MEAN PRECISION: ", round(mean_precision*100, 2), "\n")
 	print("MEAN FALSE DISCOVERY RATE: ", round(mean_fdr*100, 2))
 	print("MEAN FALSE POSITIVE RATE: ", round(mean_fpr*100, 2), "\n")
