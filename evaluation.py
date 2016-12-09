@@ -45,12 +45,7 @@ def evaluatingModel(model, model_name, X, y, cv):
 		auc_score = roc_auc_score(y_test, y_scores)
 
 		# Confusion Matrix
-		cm = confusion_matrix(y_true=y_test, y_pred=result)
-
-		tp = cm[1][1] # True positives
-		fp = cm[0][1] # False positives
-		tn = cm[0][0] # True negatives
-		fn = cm[1][0] # False negatives
+		tn, fp, fn, tp = confusion_matrix(y_true=y_test, y_pred=result).ravel()
 
 		# Evaluation Metrics
 		accuracy = accuracy_score(y_true=y_test , y_pred=result)
