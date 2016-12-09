@@ -67,19 +67,25 @@ def testing(model, model_name, X, y, cv):
 	mean_fpr = np.mean(fpr_array)
 	mean_execution_time = np.mean(execution_time_array)
 
-	# Get standard deviation
-	std = np.std(accuracy_array)
+	# Get standard deviation (population)
+	accuracy_std = np.std(accuracy_array)
+	precision_std = np.std(precision_array)
+	fdr_std = np.std(fdr_array)
+	fpr_std = np.std(fpr_array)
 
 	# Display results
 	print("MEAN ACCURACY: ", round(mean_accuracy*100, 2))
-	print("STANDARD DEVIATION: +/-", std * 100)
+	print("STANDARD DEVIATION: +/-", accuracy_std * 100,"\n")
+
 	print("MEAN PRECISION: ", round(mean_precision*100, 2), "\n")
+	print("STANDARD DEVIATION: +/-", precision_std * 100, "\n")
+
 	print("MEAN FALSE DISCOVERY RATE: ", round(mean_fdr*100, 2))
+	print("STANDARD DEVIATION: +/-", fdr_std * 100,"\n")
+
 	print("MEAN FALSE POSITIVE RATE: ", round(mean_fpr*100, 2), "\n")
-	#print("TRUE POSITIVES: ", tp)
-	#print("FALSE POSITIVES:",fp,"\n")
-	#print("TRUE NEGATIVES: ", tn)
-	#print("FALSE NEGATIVES: ", fn,"\n")
+	print("STANDARD DEVIATION: +/-", fpr_std*100, "\n")
+	
 	print("MEAN RUN TIME: ", mean_execution_time)
 
 	print("\n\n" + model_name + " STOPS HERE\n\n")
