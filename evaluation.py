@@ -2,7 +2,7 @@ import time
 
 import numpy as np
 
-from sklearn.metrics import accuracy_score, roc_auc_score, confusion_matrix
+from sklearn.metrics import accuracy_score, roc_auc_score, confusion_matrix, log_loss
 
 def evaluatingModel(model, model_name, X, y, cv):
 
@@ -14,6 +14,7 @@ def evaluatingModel(model, model_name, X, y, cv):
 	fdr_array = []
 	fpr_array = []
 	auc_array = []
+	log_loss_array = []
 	execution_time_array = []
 
 	for train_cv, test_cv in cv.split(X,y):
@@ -27,6 +28,7 @@ def evaluatingModel(model, model_name, X, y, cv):
 		model.fit(X_train , y_train)
 
 		# Predict and calculate run-time
+		# NOTE: result corresponds to y_pred
 		start = time.time()
 		result = model.predict(X_test)
 		end = time.time()
@@ -37,18 +39,22 @@ def evaluatingModel(model, model_name, X, y, cv):
 		# SVM uses 'decision_function'. Rest uses predict_proba
 		# When using predict_proba, take precaution on the index
 		if model_name == 'SVM':
-			y_scores = model.decision_function(X_test)
+			log_scores = y_scores = model.decision_function(X_test)
 		else:
 			y_scores = model.predict_proba(X_test)[:, 1]
+			log_scores = model.predict_proba(X_test)
 
 		# Get AUC score
 		auc_score = roc_auc_score(y_test, y_scores)
 
+		# Get Log Loss score
+		log_loss_score = log_loss(y_test, log_scores)
+
 		# Confusion Matrix
-		tn, fp, fn, tp = confusion_matrix(y_true=y_test, y_pred=result).ravel()
+		tn, fp, fn, tp = confusion_matrix(y_test, result).ravel()
 
 		# Evaluation Metrics
-		accuracy = accuracy_score(y_true=y_test , y_pred=result)
+		accuracy = accuracy_score(y_test , result)
 		precision = tp/(tp+fp)
 		fdr = 1 - precision # False Discovery Rate
 		fpr = fp/(fp + tn) # False Positive Rate
@@ -59,6 +65,7 @@ def evaluatingModel(model, model_name, X, y, cv):
 		fdr_array.append(fdr)
 		fpr_array.append(fpr)
 		auc_array.append(auc_score)
+		log_loss_array.append(log_loss_score)
 		execution_time_array.append(execution_time)
 
 	# Get mean results
@@ -67,6 +74,7 @@ def evaluatingModel(model, model_name, X, y, cv):
 	mean_fdr = np.mean(fdr_array)
 	mean_fpr = np.mean(fpr_array)
 	mean_auc = np.mean(auc_array)
+	mean_log_loss = np.mean(log_loss_array)
 	mean_execution_time = np.mean(execution_time_array)
 
 	# Get standard deviation (population)
@@ -75,6 +83,7 @@ def evaluatingModel(model, model_name, X, y, cv):
 	fdr_std = np.std(fdr_array)
 	fpr_std = np.std(fpr_array)
 	auc_std = np.std(auc_array)
+	log_std = np.std(log_loss_array)
 	run_std = np.std(mean_execution_time)
 
 	# Display results
@@ -82,6 +91,7 @@ def evaluatingModel(model, model_name, X, y, cv):
 	print("MEAN PRECISION: %0.2f (+/- %0.2f) \n" % (mean_precision*100, precision_std * 100))
 	print("MEAN FALSE DISCOVERY RATE: %0.2f (+/- %0.2f) \n" % (mean_fdr*100, fdr_std*100))
 	print("MEAN FALSE POSITIVE RATE: %0.2f (+/- %0.2f) \n" % (mean_fpr*100, fpr_std*100))
+	print("MEAN LOG LOSS: %0.2f (+/- %0.2f) \n " % (mean_log_loss, log_std))
 	print("MEAN AUC SCORE: %0.2f (+/- %0.2f) \n" % (mean_auc, auc_std))
 	print("MEAN RUN TIME: %0.2f (+/- %0.2f) \n" % (mean_execution_time, run_std * 100))
 
