@@ -72,21 +72,14 @@ def testing(model, model_name, X, y, cv):
 	precision_std = np.std(precision_array)
 	fdr_std = np.std(fdr_array)
 	fpr_std = np.std(fpr_array)
+	run_std = np.std(mean_execution_time)
 
 	# Display results
-	print("MEAN ACCURACY: ", round(mean_accuracy*100, 2))
-	print("STANDARD DEVIATION: +/-", accuracy_std * 100,"\n")
-
-	print("MEAN PRECISION: ", round(mean_precision*100, 2), "\n")
-	print("STANDARD DEVIATION: +/-", precision_std * 100, "\n")
-
-	print("MEAN FALSE DISCOVERY RATE: ", round(mean_fdr*100, 2))
-	print("STANDARD DEVIATION: +/-", fdr_std * 100,"\n")
-
-	print("MEAN FALSE POSITIVE RATE: ", round(mean_fpr*100, 2), "\n")
-	print("STANDARD DEVIATION: +/-", fpr_std*100, "\n")
-	
-	print("MEAN RUN TIME: ", mean_execution_time)
+	print("MEAN ACCURACY: %0.2f (+/- %0.2f) \n" % (mean_accuracy*100, accuracy_std * 100))
+	print("MEAN PRECISION: %0.2f (+/- %0.2f) \n" % (mean_precision*100, precision_std * 100))
+	print("MEAN FALSE DISCOVERY RATE: %0.2f (+/- %0.2f) \n" % (mean_fdr*100, fdr_std*100))
+	print("MEAN FALSE POSITIVE RATE: %0.2f (+/- %0.2f) \n" % (mean_fpr*100, fpr_std*100))
+	print("MEAN RUN TIME: %0.2f (+/- %0.2f) \n" % (mean_execution_time, run_std * 100))
 
 	print("\n\n" + model_name + " STOPS HERE\n\n")
 
