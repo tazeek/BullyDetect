@@ -10,9 +10,11 @@ from gensim.models import Word2Vec as w2v
 
 from sklearn.cross_validation import train_test_split, KFold
 from sklearn.model_selection import StratifiedKFold
-from sklearn.metrics import accuracy_score, confusion_matrix
+from sklearn.metrics import accuracy_score, roc_auc_score, confusion_matrix
 
 def testing(model, model_name, X, y, cv):
+
+	if model_name == "NB": print("NAIVEBAYES!")
 
 	print(model_name + " STARTS HERE\n\n")
 
@@ -26,6 +28,7 @@ def testing(model, model_name, X, y, cv):
 	for train_cv, test_cv in cv.split(X,y):
 
 		# Seperate the training and testing fold
+		# y_test corresponds to y_true
 		X_train, X_test = X[train_cv], X[test_cv]
 		y_train, y_test = y[train_cv], y[test_cv]
 
@@ -38,6 +41,14 @@ def testing(model, model_name, X, y, cv):
 		end = time.time()
 
 		execution_time = end - start
+
+		# Get the probability scores
+		# SVM uses 'decision_function'. Rest uses predict_proba
+		# When using predict_proba, take precaution on the index
+		if model_name == 'SVM':
+			y_scores = model.decision_function(X_test)
+		else:
+			y_scores = model.predict_proba(X_test)[:, 1]
 
 		# Confusion Matrix
 		cm = confusion_matrix(y_true=y_test, y_pred=result)
@@ -160,7 +171,7 @@ nb = GaussianNB()
 rf = RandomForestClassifier(n_estimators=100)
 svm = LinearSVC()
 
-models = { "Naive Bayes": nb, "Support Vector Machines": svm, "Random Forest": rf}
+models = { "NB": nb, "SVM": svm, "RF": rf}
 
 
 # Test with 10 fold Cross validation/Stratified K Fold
