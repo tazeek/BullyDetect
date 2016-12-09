@@ -14,8 +14,6 @@ from sklearn.metrics import accuracy_score, roc_auc_score, confusion_matrix
 
 def testing(model, model_name, X, y, cv):
 
-	if model_name == "NB": print("NAIVEBAYES!")
-
 	print(model_name + " STARTS HERE\n\n")
 
 	# Array to store results
@@ -23,6 +21,7 @@ def testing(model, model_name, X, y, cv):
 	precision_array = []
 	fdr_array = []
 	fpr_array = []
+	auc_array = []
 	execution_time_array = []
 
 	for train_cv, test_cv in cv.split(X,y):
@@ -48,7 +47,10 @@ def testing(model, model_name, X, y, cv):
 		if model_name == 'SVM':
 			y_scores = model.decision_function(X_test)
 		else:
-			y_scores = model.predict_proba(X_test)[:, 1]
+			y_scores = model.predict_proba(X_test)[:, 0]
+
+		# Get AUC score
+		auc_score = roc_auc_score(y_test, y_scores)
 
 		# Confusion Matrix
 		cm = confusion_matrix(y_true=y_test, y_pred=result)
@@ -70,6 +72,7 @@ def testing(model, model_name, X, y, cv):
 		fdr_array.append(fdr)
 		fpr_array.append(fpr)
 		execution_time_array.append(execution_time)
+		auc_array.append(auc_score)
 
 	# Get mean results
 	mean_accuracy = np.mean(accuracy_array)
@@ -77,6 +80,7 @@ def testing(model, model_name, X, y, cv):
 	mean_fdr = np.mean(fdr_array)
 	mean_fpr = np.mean(fpr_array)
 	mean_execution_time = np.mean(execution_time_array)
+	mean_auc = np.mean(auc_array)
 
 	# Get standard deviation (population)
 	accuracy_std = np.std(accuracy_array)
@@ -84,12 +88,14 @@ def testing(model, model_name, X, y, cv):
 	fdr_std = np.std(fdr_array)
 	fpr_std = np.std(fpr_array)
 	run_std = np.std(mean_execution_time)
+	auc_std = np.std(auc_array)
 
 	# Display results
 	print("MEAN ACCURACY: %0.2f (+/- %0.2f) \n" % (mean_accuracy*100, accuracy_std * 100))
 	print("MEAN PRECISION: %0.2f (+/- %0.2f) \n" % (mean_precision*100, precision_std * 100))
 	print("MEAN FALSE DISCOVERY RATE: %0.2f (+/- %0.2f) \n" % (mean_fdr*100, fdr_std*100))
 	print("MEAN FALSE POSITIVE RATE: %0.2f (+/- %0.2f) \n" % (mean_fpr*100, fpr_std*100))
+	print("MEAN AUC SCORE: %0.2f (+/- %0.2f) \n" % (mean_auc, auc_std))
 	print("MEAN RUN TIME: %0.2f (+/- %0.2f) \n" % (mean_execution_time, run_std * 100))
 
 	print("\n\n" + model_name + " STOPS HERE\n\n")
