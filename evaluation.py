@@ -2,9 +2,13 @@ import time
 
 import numpy as np
 
-from sklearn.metrics import accuracy_score, roc_auc_score, confusion_matrix, log_loss
+from sklearn.metrics import accuracy_score, roc_auc_score, confusion_matrix, log_loss, hinge_loss
 
 def evaluatingModel(model, model_name, X, y, cv):
+
+	# For the purpose of Hinge Loss
+	# Replace 0 with -1
+	y[y == 0] = -1
 
 	print(model_name + " STARTS HERE\n\n")
 
@@ -15,6 +19,7 @@ def evaluatingModel(model, model_name, X, y, cv):
 	fpr_array = []
 	auc_array = []
 	log_loss_array = []
+	hinge_loss_array = []
 	execution_time_array = []
 
 	for train_cv, test_cv in cv.split(X,y):
@@ -50,6 +55,9 @@ def evaluatingModel(model, model_name, X, y, cv):
 		# Get Log Loss score
 		log_loss_score = log_loss(y_test, log_scores)
 
+		# Get Hinge Loss score
+		hinge_loss_score = hinge_loss(y_test, y_scores)
+
 		# Confusion Matrix
 		tn, fp, fn, tp = confusion_matrix(y_test, result).ravel()
 
@@ -66,6 +74,7 @@ def evaluatingModel(model, model_name, X, y, cv):
 		fpr_array.append(fpr)
 		auc_array.append(auc_score)
 		log_loss_array.append(log_loss_score)
+		hinge_loss_array.append(hinge_loss_score)
 		execution_time_array.append(execution_time)
 
 	# Get mean results
@@ -75,6 +84,7 @@ def evaluatingModel(model, model_name, X, y, cv):
 	mean_fpr = np.mean(fpr_array)
 	mean_auc = np.mean(auc_array)
 	mean_log_loss = np.mean(log_loss_array)
+	mean_hinge_loss = np.mean(hinge_loss_array)
 	mean_execution_time = np.mean(execution_time_array)
 
 	# Get standard deviation (population)
@@ -84,6 +94,7 @@ def evaluatingModel(model, model_name, X, y, cv):
 	fpr_std = np.std(fpr_array)
 	auc_std = np.std(auc_array)
 	log_std = np.std(log_loss_array)
+	hinge_std = np.std(hinge_loss_array)
 	run_std = np.std(mean_execution_time)
 
 	# Display results
@@ -91,6 +102,7 @@ def evaluatingModel(model, model_name, X, y, cv):
 	print("MEAN PRECISION: %0.2f (+/- %0.2f) \n" % (mean_precision*100, precision_std * 100))
 	print("MEAN FALSE DISCOVERY RATE: %0.2f (+/- %0.2f) \n" % (mean_fdr*100, fdr_std*100))
 	print("MEAN FALSE POSITIVE RATE: %0.2f (+/- %0.2f) \n" % (mean_fpr*100, fpr_std*100))
+	print("MEAN HINGE LOSS: %0.2f (+/- %0.2f) \n" % (mean_hinge_loss, hinge_std))
 	print("MEAN LOG LOSS: %0.2f (+/- %0.2f) \n " % (mean_log_loss, log_std))
 	print("MEAN AUC SCORE: %0.2f (+/- %0.2f) \n" % (mean_auc, auc_std))
 	print("MEAN RUN TIME: %0.2f (+/- %0.2f) \n" % (mean_execution_time, run_std * 100))
