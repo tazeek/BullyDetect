@@ -87,7 +87,6 @@ svm = LinearSVC()
 # Store them in a dicitonary
 models = { "NB": nb, "SVM": svm, "RF": rf}
 
-
 # Test with 10 fold Cross validation/Stratified K Fold
 skf = StratifiedKFold(n_splits=10)
 
