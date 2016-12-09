@@ -9,6 +9,7 @@ from sklearn.ensemble import RandomForestClassifier
 from gensim.models import Word2Vec as w2v 
 
 from sklearn.cross_validation import train_test_split, KFold
+from sklearn.model_selection import StratifiedKFold
 from sklearn.metrics import accuracy_score, confusion_matrix
 
 def testing(model, model_name, X, y, cv):
@@ -22,7 +23,7 @@ def testing(model, model_name, X, y, cv):
 	fpr_array = []
 	execution_time_array = []
 
-	for train_cv, test_cv in cv:
+	for train_cv, test_cv in cv.split(X,y):
 
 		# Seperate the training and testing fold
 		X_train, X_test = X[train_cv], X[test_cv]
@@ -159,9 +160,10 @@ svm = LinearSVC()
 models = { "Naive Bayes": nb, "Support Vector Machines": svm, "Random Forest": rf}
 
 
-# Test with 10 fold Cross validation
-print("TESTING WITH 10 FOLD CROSS VALIDATION \n\n")
-cv = KFold(n=len(X), shuffle=False, n_folds=10)
+# Test with 10 fold Cross validation/Stratified K Fold
+print("TESTING WITH STRATIFIED K FOLD \n\n")
+#cv = KFold(n=len(X), shuffle=False, n_folds=10)
+skf = StratifiedKFold(n_splits=5)
 
 for key, value in models.items():
-	testing(value, key, X, y, cv)
+	testing(value, key, X, y, skf)
