@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np 
 import os
 
-from sklearn.naive_bayes import GaussianNB, MultinomialNB
+from sklearn.naive_bayes import GaussianNB
 from sklearn.svm import LinearSVC
 from sklearn.ensemble import RandomForestClassifier
 from gensim.models import Word2Vec as w2v 
@@ -66,7 +66,6 @@ df = pd.read_csv('clean_dataset.csv')
 
 # Separate out comments and labels
 X , y = df['Comment'], df['Insult']
-split = 3900
 
 # Transform the data
 print("TRANSFORMING DATA \n\n")
@@ -83,7 +82,7 @@ models = { "NB": nb, "SVM": svm, "RF": rf}
 
 
 # Test with 10 fold Cross validation/Stratified K Fold
-skf = StratifiedKFold(n_splits=5)
+skf = StratifiedKFold(n_splits=10)
 
 for key, value in models.items():
 	evaluatingModel(value, key, X, y, skf)
