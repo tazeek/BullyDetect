@@ -1,6 +1,5 @@
 import pandas as pd 
 import numpy as np 
-import time
 import os
 
 from sklearn.naive_bayes import GaussianNB, MultinomialNB
@@ -8,97 +7,9 @@ from sklearn.svm import LinearSVC
 from sklearn.ensemble import RandomForestClassifier
 from gensim.models import Word2Vec as w2v 
 
-from sklearn.cross_validation import train_test_split, KFold
 from sklearn.model_selection import StratifiedKFold
-from sklearn.metrics import accuracy_score, roc_auc_score, confusion_matrix
 
-def testing(model, model_name, X, y, cv):
-
-	print(model_name + " STARTS HERE\n\n")
-
-	# Array to store results
-	accuracy_array = []
-	precision_array = []
-	fdr_array = []
-	fpr_array = []
-	auc_array = []
-	execution_time_array = []
-
-	for train_cv, test_cv in cv.split(X,y):
-
-		# Seperate the training and testing fold
-		# y_test corresponds to y_true
-		X_train, X_test = X[train_cv], X[test_cv]
-		y_train, y_test = y[train_cv], y[test_cv]
-
-		# Train the model
-		model.fit(X_train , y_train)
-
-		# Predict and calculate run-time
-		start = time.time()
-		result = model.predict(X_test)
-		end = time.time()
-
-		execution_time = end - start
-
-		# Get the probability scores
-		# SVM uses 'decision_function'. Rest uses predict_proba
-		# When using predict_proba, take precaution on the index
-		if model_name == 'SVM':
-			y_scores = model.decision_function(X_test)
-		else:
-			y_scores = model.predict_proba(X_test)[:, 0]
-
-		# Get AUC score
-		auc_score = roc_auc_score(y_test, y_scores)
-
-		# Confusion Matrix
-		cm = confusion_matrix(y_true=y_test, y_pred=result)
-
-		tp = cm[1][1] # True positives
-		fp = cm[0][1] # False positives
-		tn = cm[0][0] # True negatives
-		fn = cm[1][0] # False negatives
-
-		# Evaluation Metrics
-		accuracy = accuracy_score(y_true=y_test , y_pred=result)
-		precision = tp/(tp+fp)
-		fdr = 1 - precision # False Discovery Rate
-		fpr = fp/(fp + tn) # False Positive Rate
-
-		# Append results
-		accuracy_array.append(accuracy)
-		precision_array.append(precision)
-		fdr_array.append(fdr)
-		fpr_array.append(fpr)
-		execution_time_array.append(execution_time)
-		auc_array.append(auc_score)
-
-	# Get mean results
-	mean_accuracy = np.mean(accuracy_array)
-	mean_precision = np.mean(precision_array)
-	mean_fdr = np.mean(fdr_array)
-	mean_fpr = np.mean(fpr_array)
-	mean_execution_time = np.mean(execution_time_array)
-	mean_auc = np.mean(auc_array)
-
-	# Get standard deviation (population)
-	accuracy_std = np.std(accuracy_array)
-	precision_std = np.std(precision_array)
-	fdr_std = np.std(fdr_array)
-	fpr_std = np.std(fpr_array)
-	run_std = np.std(mean_execution_time)
-	auc_std = np.std(auc_array)
-
-	# Display results
-	print("MEAN ACCURACY: %0.2f (+/- %0.2f) \n" % (mean_accuracy*100, accuracy_std * 100))
-	print("MEAN PRECISION: %0.2f (+/- %0.2f) \n" % (mean_precision*100, precision_std * 100))
-	print("MEAN FALSE DISCOVERY RATE: %0.2f (+/- %0.2f) \n" % (mean_fdr*100, fdr_std*100))
-	print("MEAN FALSE POSITIVE RATE: %0.2f (+/- %0.2f) \n" % (mean_fpr*100, fpr_std*100))
-	print("MEAN AUC SCORE: %0.2f (+/- %0.2f) \n" % (mean_auc, auc_std))
-	print("MEAN RUN TIME: %0.2f (+/- %0.2f) \n" % (mean_execution_time, run_std * 100))
-
-	print("\n\n" + model_name + " STOPS HERE\n\n")
+from evaluation import evaluatingModel
 
 # One of the kaggle tests
 def makeFeatureVec(words, model, num_features):
@@ -161,29 +72,18 @@ split = 3900
 print("TRANSFORMING DATA \n\n")
 X = getAvgFeatureVecs(X, model, 300)
 
-# Split the sample or make your own sample or skip
-#X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.5, random_state=0)
-#X_train, y_train = df['Comment'][:split], df['Insult'][:split]
-#X_test, y_test = df['Comment'][split:], df['Insult'][split:]
-
-# Data Transformation
-#X = getAvgFeatureVecs(X, model, 300)
-#X_train = getAvgFeatureVecs(X_train, model, 300)
-#X_test = getAvgFeatureVecs(X_test , model, 300)
-
 # Implement Classifier(s) here and store in dictionary
 print("INITLIAZING CLASSIFIERS \n\n")
 nb = GaussianNB()
 rf = RandomForestClassifier(n_estimators=100)
 svm = LinearSVC()
 
+# Store them in a dicitonary
 models = { "NB": nb, "SVM": svm, "RF": rf}
 
 
 # Test with 10 fold Cross validation/Stratified K Fold
-print("TESTING WITH STRATIFIED K FOLD \n\n")
-#cv = KFold(n=len(X), shuffle=False, n_folds=10)
 skf = StratifiedKFold(n_splits=5)
 
 for key, value in models.items():
-	testing(value, key, X, y, skf)
+	evaluatingModel(value, key, X, y, skf)
