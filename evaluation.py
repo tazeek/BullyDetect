@@ -2,6 +2,7 @@ import time
 
 import numpy as np
 
+from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, roc_auc_score, confusion_matrix
 
 def evaluatingModel(model, model_name, X, y, skv):
@@ -35,13 +36,18 @@ def evaluatingModel(model, model_name, X, y, skv):
 		execution_time = end - start
 
 		# Get the probability scores
-		# SVM uses 'decision_function'. Rest uses predict_proba
-		# When using predict_proba, take precaution on the index
+		# Use Logistic Regression for LinearSVC case
 		if model_name == 'SVM':
-			log_scores = y_scores = model.decision_function(X_test)
+
+			lr = LogisticRegression()
+			lr.fit(X_train, y_train)
+
+			y_scores = lr.predict_proba(X_test)[:, 1]
+			#y_scores = model.decision_function(X_test)
+
 		else:
+
 			y_scores = model.predict_proba(X_test)[:, 1]
-			log_scores = model.predict_proba(X_test)
 
 		# Get AUC score
 		auc_score = roc_auc_score(y_test, y_scores)
