@@ -3,7 +3,7 @@ import time
 import numpy as np
 
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import accuracy_score, roc_auc_score, confusion_matrix
+from sklearn.metrics import accuracy_score, roc_auc_score, confusion_matrix, log_loss
 
 def evaluatingModel(model, model_name, X, y, skv):
 
@@ -15,6 +15,7 @@ def evaluatingModel(model, model_name, X, y, skv):
 	fdr_array = []
 	fpr_array = []
 	auc_array = []
+	log_loss_array = []
 	execution_time_array = []
 
 	for train_cv, test_cv in skv.split(X,y):
@@ -42,15 +43,15 @@ def evaluatingModel(model, model_name, X, y, skv):
 			lr = LogisticRegression()
 			lr.fit(X_train, y_train)
 
-			y_scores = lr.predict_proba(X_test)[:, 1]
-			#y_scores = model.decision_function(X_test)
+			y_scores = lr.predict_proba(X_test)
 
 		else:
 
-			y_scores = model.predict_proba(X_test)[:, 1]
+			y_scores = model.predict_proba(X_test)
 
-		# Get AUC score
-		auc_score = roc_auc_score(y_test, y_scores)
+		# Get AUC score, Log Loss
+		auc_score = roc_auc_score(y_test, y_scores[:, 1])
+		log_loss_score = log_loss(y_test, y_scores)
 
 		# Confusion Matrix
 		tn, fp, fn, tp = confusion_matrix(y_test, result).ravel()
@@ -67,6 +68,7 @@ def evaluatingModel(model, model_name, X, y, skv):
 		fdr_array.append(fdr)
 		fpr_array.append(fpr)
 		auc_array.append(auc_score)
+		log_loss_array.append(log_loss_score)
 		execution_time_array.append(execution_time)
 
 	# Get mean results
@@ -75,6 +77,7 @@ def evaluatingModel(model, model_name, X, y, skv):
 	mean_fdr = np.mean(fdr_array)
 	mean_fpr = np.mean(fpr_array)
 	mean_auc = np.mean(auc_array)
+	mean_log_loss = np.mean(log_loss_array)
 	mean_execution_time = np.mean(execution_time_array)
 
 	# Get standard deviation (population)
@@ -83,6 +86,7 @@ def evaluatingModel(model, model_name, X, y, skv):
 	fdr_std = np.std(fdr_array)
 	fpr_std = np.std(fpr_array)
 	auc_std = np.std(auc_array)
+	log_std = np.std(log_loss_array)
 	run_std = np.std(mean_execution_time)
 
 	# Display results
@@ -91,6 +95,7 @@ def evaluatingModel(model, model_name, X, y, skv):
 	print("MEAN FALSE DISCOVERY RATE: %0.2f (+/- %0.2f) \n" % (mean_fdr, fdr_std))
 	print("MEAN FALSE POSITIVE RATE: %0.2f (+/- %0.2f) \n" % (mean_fpr, fpr_std))
 	print("MEAN AUC SCORE: %0.2f (+/- %0.2f) \n" % (mean_auc, auc_std))
+	print("MEAN LOG LOSS SCORE: %0.2f (+/- %0.2f) \n" % (mean_log_loss, log_std))
 	print("MEAN RUN TIME: %0.2f (+/- %0.2f) \n" % (mean_execution_time, run_std))
 
 	print("\n\n" + model_name + " STOPS HERE\n\n")
