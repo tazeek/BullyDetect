@@ -4,7 +4,7 @@ import numpy as np
 
 from sklearn.metrics import accuracy_score, roc_auc_score, confusion_matrix
 
-def evaluatingModel(model, model_name, X, y, cv):
+def evaluatingModel(model, model_name, X, y, skv):
 
 	print(model_name + " STARTS HERE\n\n")
 
@@ -16,7 +16,7 @@ def evaluatingModel(model, model_name, X, y, cv):
 	auc_array = []
 	execution_time_array = []
 
-	for train_cv, test_cv in cv.split(X,y):
+	for train_cv, test_cv in skv.split(X,y):
 
 		# Seperate the training and testing fold
 		# NOTE: y_test corresponds to y_true
@@ -80,11 +80,11 @@ def evaluatingModel(model, model_name, X, y, cv):
 	run_std = np.std(mean_execution_time)
 
 	# Display results
-	print("MEAN ACCURACY: %0.2f (+/- %0.2f) \n" % (mean_accuracy*100, accuracy_std * 100))
-	print("MEAN PRECISION: %0.2f (+/- %0.2f) \n" % (mean_precision*100, precision_std * 100))
-	print("MEAN FALSE DISCOVERY RATE: %0.2f (+/- %0.2f) \n" % (mean_fdr*100, fdr_std*100))
-	print("MEAN FALSE POSITIVE RATE: %0.2f (+/- %0.2f) \n" % (mean_fpr*100, fpr_std*100))
+	print("MEAN ACCURACY: %0.2f (+/- %0.2f) \n" % (mean_accuracy, accuracy_std))
+	print("MEAN PRECISION: %0.2f (+/- %0.2f) \n" % (mean_precision, precision_std))
+	print("MEAN FALSE DISCOVERY RATE: %0.2f (+/- %0.2f) \n" % (mean_fdr, fdr_std))
+	print("MEAN FALSE POSITIVE RATE: %0.2f (+/- %0.2f) \n" % (mean_fpr, fpr_std))
 	print("MEAN AUC SCORE: %0.2f (+/- %0.2f) \n" % (mean_auc, auc_std))
-	print("MEAN RUN TIME: %0.2f (+/- %0.2f) \n" % (mean_execution_time, run_std * 100))
+	print("MEAN RUN TIME: %0.2f (+/- %0.2f) \n" % (mean_execution_time, run_std))
 
 	print("\n\n" + model_name + " STOPS HERE\n\n")
