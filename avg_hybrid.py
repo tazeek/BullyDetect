@@ -3,14 +3,9 @@ import numpy as np
 import os
 import pickle
 
-from sklearn.naive_bayes import GaussianNB
-from sklearn.svm import LinearSVC
-from sklearn.ensemble import RandomForestClassifier
 from gensim.models import Word2Vec as w2v
 
-from sklearn.model_selection import StratifiedKFold
-
-from evaluation import evaluatingModel 
+from evaluation import evaluate
 
 # One of the kaggle tests 
 def makeFeatureVec(words, model, vector_dict, num_features):
@@ -78,17 +73,5 @@ vector_dict = pickle.load(open(FILE,"rb"))
 print("TRANSFORMING DATA \n\n")
 X = getAvgFeatureVecs(X, model, vector_dict, 300)
 
-# Implement Classifier(s) here and store in dictionary
-print("INITLIAZING CLASSIFIERS \n\n")
-nb = GaussianNB()
-rf = RandomForestClassifier(n_estimators=100)
-svm = LinearSVC()
-
-# Store them in a dicitonary
-models = { "NB": nb, "SVM": svm, "RF": rf}
-
-# Test with 10 fold Cross validation/Stratified K Fold
-skf = StratifiedKFold(n_splits=10)
-
-for key, value in models.items():
-	evaluatingModel(value, key, X, y, skf)
+# Evaluate models 
+evaluate(X,y)
