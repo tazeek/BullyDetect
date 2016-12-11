@@ -2,7 +2,13 @@ import time
 
 import numpy as np
 
+from sklearn.naive_bayes import GaussianNB
+from sklearn.svm import LinearSVC
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
+
+from sklearn.model_selection import StratifiedKFold
+
 from sklearn.metrics import accuracy_score, roc_auc_score, confusion_matrix, log_loss, brier_score_loss
 
 def evaluatingModel(model, model_name, X, y, skv):
@@ -105,3 +111,21 @@ def evaluatingModel(model, model_name, X, y, skv):
 	print("MEAN RUN TIME: %0.2f (+/- %0.2f) \n" % (mean_execution_time, run_std))
 
 	print("\n\n" + model_name + " STOPS HERE\n\n")
+
+def evaluate(X, y):
+
+	# Implement Classifier(s) here and store in dictionary
+	print("INITLIAZING CLASSIFIERS \n\n")
+	nb = GaussianNB()
+	rf = RandomForestClassifier(n_estimators=100)
+	svm = LinearSVC()
+
+	# Store them in a dicitonary
+	models = { "NB": nb, "SVM": svm, "RF": rf}
+
+
+	# Test with 10 fold Cross validation/Stratified K Fold
+	skf = StratifiedKFold(n_splits=10)
+
+	for key, value in models.items():
+		evaluatingModel(value, key, X, y, skf)
