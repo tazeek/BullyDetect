@@ -1,4 +1,5 @@
 import time
+import os
 
 import numpy as np
 
@@ -125,7 +126,7 @@ def evaluate(X, y):
 
 
 	# Test with 10 fold Cross validation/Stratified K Fold
-	skf = StratifiedKFold(n_splits=10)
+	skf = StratifiedKFold(n_splits=10, shuffle=True)
 
 	for key, value in models.items():
 		evaluatingModel(value, key, X, y, skf)
