@@ -4,7 +4,7 @@ import os
 
 from gensim.models import Word2Vec as w2v 
 
-from evaluation import evaluatingModel
+from evaluation import evaluate
 
 
 os.system('cls')
