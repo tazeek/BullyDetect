@@ -113,8 +113,9 @@ def evaluatingModel(model, model_name, X, y, skv):
 
 	print("\n\n" + model_name + " STOPS HERE\n\n")
 
-def evaluate(X, y):
+def evaluate(X, y, file_name):
 
+	print(file_name)
 	# Implement Classifier(s) here and store in dictionary
 	print("INITLIAZING CLASSIFIERS \n\n")
 	nb = GaussianNB()
