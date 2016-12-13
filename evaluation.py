@@ -1,5 +1,6 @@
 import time
 import os
+import pickle
 
 import numpy as np
 
@@ -68,6 +69,12 @@ def evaluatingModel(model, model_name, X, y, skv, file_name):
 		# Confusion Matrix
 		tn, fp, fn, tp = confusion_matrix(y_test, result).ravel()
 
+		# Add the results to confusion matrix
+		cm_dict["tn"] += tn
+		cm_dict["fp"] += fp 
+		cm_dict["fn"] += fn 
+		cm_dict["tp"] += tp
+
 		# Evaluation Metrics
 		accuracy = accuracy_score(y_test , result)
 		precision = tp/(tp+fp)
@@ -115,6 +122,10 @@ def evaluatingModel(model, model_name, X, y, skv, file_name):
 	print("MEAN RUN TIME: %0.2f (+/- %0.2f) \n" % (mean_execution_time, run_std))
 
 	print("\n\n" + model_name + " STOPS HERE\n\n")
+
+	# Save the confusion matrix using pickle
+	FILE = "Confusion Matrix/" + model_name.lower() + "_" + file_name + ".pk"
+	pickle.dump(cm_dict, open(FILE, "wb"))
 
 def evaluate(X, y, file_name):
 
