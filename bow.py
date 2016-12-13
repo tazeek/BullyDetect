@@ -140,6 +140,9 @@ svm = LinearSVC()
 # Store them in a dicitonary
 models = { "NB": nb, "SVM": svm, "RF": rf}
 
+# Get the Python's file name. Remove the .py extension
+file_name = os.path.basename(__file__)
+file_name = file_name.replace(".py","")
 
 # Test with 10 fold Cross validation/Stratified K Fold
 skf = StratifiedKFold(n_splits=10)

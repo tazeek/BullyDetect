@@ -76,5 +76,9 @@ print("TRANSFORMING DATASET \n\n")
 MAX_WORDS = 300
 X = commentFeatureVecs(X, model, vect_dict, MAX_WORDS)
 
-# Evaluate model
-evaluate(X,y)
+# Get the Python's file name. Remove the .py extension
+file_name = os.path.basename(__file__)
+file_name = file_name.replace(".py","")
+
+# Evaluate models 
+evaluate(X,y, file_name)

@@ -66,5 +66,9 @@ X , y = df['Comment'], df['Insult']
 print("TRANSFORMING DATA \n\n")
 X = getAvgFeatureVecs(X, model, 300)
 
+# Get the Python's file name. Remove the .py extension
+file_name = os.path.basename(__file__)
+file_name = file_name.replace(".py","")
+
 # Evaluate models 
-evaluate(X,y)
+evaluate(X,y, file_name)

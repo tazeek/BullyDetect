@@ -27,5 +27,9 @@ print("TRANSFORMING DATA \n\n")
 X = np.array([np.mean([model[word] for word in sentence if word in model]) for sentence in X])
 X = X.reshape(len(X),1)
 
+# Get the Python's file name. Remove the .py extension
+file_name = os.path.basename(__file__)
+file_name = file_name.replace(".py","")
+
 # Evaluate models 
-evaluate(X,y)
+evaluate(X,y, file_name)
