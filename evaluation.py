@@ -12,7 +12,10 @@ from sklearn.model_selection import StratifiedKFold
 
 from sklearn.metrics import accuracy_score, roc_auc_score, confusion_matrix, log_loss, brier_score_loss
 
-def evaluatingModel(model, model_name, X, y, skv):
+def evaluatingModel(model, model_name, X, y, skv, file_name):
+
+	# Create Confusion Matrix Dictionary
+	cm_dict = { "tp": 0, "fp": 0, "tn": 0, "fn": 0}
 
 	print(model_name + " STARTS HERE\n\n")
 
@@ -115,7 +118,6 @@ def evaluatingModel(model, model_name, X, y, skv):
 
 def evaluate(X, y, file_name):
 
-	print(file_name)
 	# Implement Classifier(s) here and store in dictionary
 	print("INITLIAZING CLASSIFIERS \n\n")
 	nb = GaussianNB()
@@ -130,4 +132,4 @@ def evaluate(X, y, file_name):
 	skf = StratifiedKFold(n_splits=10, shuffle=True)
 
 	for key, value in models.items():
-		evaluatingModel(value, key, X, y, skf)
+		evaluatingModel(value, key, X, y, skf, file_name)
