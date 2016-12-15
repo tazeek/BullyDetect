@@ -13,7 +13,7 @@ model = w2v.load_word2vec_format('W2V Models/w2v_reddit_unigram_300d.bin', binar
 
 # Specify the number of words and clusters
 # NOTE: When utilizing full Word2Vec power, ignore WORDS
-WORDS = 50000
+WORDS = 100000
 CLUSTERS = 500
 
 # Get the word vectors and the word
