@@ -1,6 +1,7 @@
 import time 
 import pickle
 import os
+import logging
 
 from gensim.models import Word2Vec as w2v 
 from sklearn.cluster import KMeans
@@ -12,8 +13,8 @@ model = w2v.load_word2vec_format('W2V Models/w2v_reddit_unigram_300d.bin', binar
 
 # Specify the number of words and clusters
 # NOTE: When utilizing full Word2Vec power, ignore WORDS
-WORDS = 5000
-CLUSTERS = 250
+WORDS = 50000
+CLUSTERS = 500
 
 # Get the word vectors and the word
 word_vectors = model.syn0[:WORDS]
@@ -36,5 +37,5 @@ print("TIME TAKEN: ", end-start)
 word_centroid_map = dict(zip(words,idx))
 
 # Save the dictionary
-FILE = "K-Means Model/dict_250.pk"
+FILE = "K-Means Models/dict_500.pk"
 pickle.dump(word_centroid_map, open(FILE, "wb"))
