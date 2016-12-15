@@ -9,21 +9,24 @@ from sklearn.cluster import KMeans
 os.system('cls')
 
 # Load Word2Vec model
+print("LOADING WORD2VEC MODEL \n\n")
 model = w2v.load_word2vec_format('W2V Models/w2v_reddit_unigram_300d.bin', binary=True)
 
-# Specify the number of words and clusters
+# Specify the number of words and clusters (250,500,1000,2000)
 # NOTE: When utilizing full Word2Vec power, ignore WORDS
-WORDS = 100000
-CLUSTERS = 500
+#WORDS = 100000
+CLUSTERS = 250
 
 # Get the word vectors and the word
-word_vectors = model.syn0[:WORDS]
-words = model.index2word[:WORDS]
+print("GETTING WORD VECTORS AND WORDS \n\n")
+word_vectors = model.syn0
+words = model.index2word
 
 # Initialize K-Means
 k_means = KMeans( n_clusters = CLUSTERS )
 
 # Fit the model, get the centroid number and calculate time
+print("TRAINING K-MEANS WITH %i CLUSTERS \n\n" % (CLUSTERS))
 start = time.time()
 idx = k_means.fit_predict(word_vectors)
 end = time.time()
@@ -37,5 +40,6 @@ print("TIME TAKEN: ", end-start)
 word_centroid_map = dict(zip(words,idx))
 
 # Save the dictionary
-FILE = "K-Means Models/dict_500.pk"
+print("\n\nSAVING MODEL")
+FILE = "K-Means Models/dict_250_full.pk"
 pickle.dump(word_centroid_map, open(FILE, "wb"))
