@@ -29,7 +29,6 @@ def evaluatingModel(model, model_name, X, y, skv):
 	# Array to store results
 	accuracy_array = []
 	precision_array = []
-	fdr_array = []
 	fpr_array = []
 	auc_array = []
 	log_loss_array = []
@@ -88,13 +87,11 @@ def evaluatingModel(model, model_name, X, y, skv):
 		# Evaluation Metrics
 		accuracy = accuracy_score(y_test , result)
 		precision = tp/(tp+fp)
-		fdr = 1 - precision # False Discovery Rate
 		fpr = fp/(fp + tn) # False Positive Rate
 
 		# Append results
 		accuracy_array.append(accuracy)
 		precision_array.append(precision)
-		fdr_array.append(fdr)
 		fpr_array.append(fpr)
 		auc_array.append(auc_score)
 		log_loss_array.append(log_loss_score)
@@ -104,7 +101,6 @@ def evaluatingModel(model, model_name, X, y, skv):
 	# Get mean results
 	mean_accuracy = np.mean(accuracy_array)
 	mean_precision = np.mean(precision_array)
-	mean_fdr = np.mean(fdr_array)
 	mean_fpr = np.mean(fpr_array)
 	mean_auc = np.mean(auc_array)
 	mean_log_loss = np.mean(log_loss_array)
@@ -114,7 +110,6 @@ def evaluatingModel(model, model_name, X, y, skv):
 	# Get standard deviation (population)
 	accuracy_std = np.std(accuracy_array)
 	precision_std = np.std(precision_array)
-	fdr_std = np.std(fdr_array)
 	fpr_std = np.std(fpr_array)
 	auc_std = np.std(auc_array)
 	log_std = np.std(log_loss_array)
@@ -124,7 +119,6 @@ def evaluatingModel(model, model_name, X, y, skv):
 	# Display results
 	print("MEAN ACCURACY: %0.2f (+/- %0.2f) \n" % (mean_accuracy, accuracy_std))
 	print("MEAN PRECISION: %0.2f (+/- %0.2f) \n" % (mean_precision, precision_std))
-	print("MEAN FALSE DISCOVERY RATE: %0.2f (+/- %0.2f) \n" % (mean_fdr, fdr_std))
 	print("MEAN FALSE POSITIVE RATE: %0.2f (+/- %0.2f) \n" % (mean_fpr, fpr_std))
 	print("MEAN AUC SCORE: %0.2f (+/- %0.2f) \n" % (mean_auc, auc_std))
 	print("MEAN LOG LOSS SCORE: %0.2f (+/- %0.2f) \n" % (mean_log_loss, log_std))
