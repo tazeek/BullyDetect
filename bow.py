@@ -128,7 +128,7 @@ def evaluatingModel(model, model_name, X, y, skv):
 	print("\n\n" + model_name + " STOPS HERE\n\n")
 
 	# Save the confusion matrix using pickle
-	FILE = "Confusion Matrix/" + model_name.lower() + "_" + file_name + ".pk"
+	FILE = "Confusion Matrix (Balanced)/" + model_name.lower() + "_" + file_name + ".pk"
 	pickle.dump(cm_dict, open(FILE, "wb"))
 
 os.system('cls')
