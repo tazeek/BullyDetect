@@ -16,13 +16,13 @@ def doClustering():
 
 	# Specify the number of words and clusters (250,500,1000,2000)
 	# NOTE: When utilizing full Word2Vec power, ignore WORDS
-	WORDS = 600000
+	#WORDS = 600000
 	CLUSTERS = 250
 
 	# Get the word vectors and the word
 	print("GETTING WORD VECTORS AND WORDS \n\n")
-	word_vectors = model.syn0[:WORDS]
-	words = model.index2word[:WORDS]
+	word_vectors = model.syn0
+	words = model.index2word
 
 	# Delete the model to clear up space
 	del model
