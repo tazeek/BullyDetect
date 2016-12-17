@@ -39,4 +39,4 @@ for cluster_num in range(0, total_clusters):
 
 # Save the array
 FILE = "Word Dictionaries/dict_500C.pk"
-pickle.dump(array_dict, open("Word Dictionaries/dict_250C.pk", "wb"))
+pickle.dump(array_dict, open(FILE, "wb"))
