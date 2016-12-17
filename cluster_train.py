@@ -2,6 +2,7 @@ import time
 import pickle
 import os
 import logging
+import datetime
 
 from gensim.models import Word2Vec as w2v 
 from sklearn.cluster import KMeans
@@ -24,11 +25,15 @@ def doClustering():
 	word_vectors = model.syn0
 	words = model.index2word
 
-	# Delete the model to clear up space
+	# Delete the model to clear up memory
 	del model
 
 	# Initialize K-Means
 	k_means = KMeans( n_clusters = CLUSTERS, n_jobs=6, precompute_distances=True)
+
+	# Give starting time of initialization
+	start = datetime.datetime.now()
+	print("STARTING AT: %i/%i/%i %i:%i \n" % (start.month, start.day, start.year, start.hour, start.minute))
 
 	# Fit the model, get the centroid number and calculate time
 	print("TRAINING K-MEANS WITH %i CLUSTERS \n\n" % (CLUSTERS))
