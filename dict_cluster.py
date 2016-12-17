@@ -4,7 +4,7 @@ import os
 os.system('cls')
 
 # Specify the file
-FILE = "K-Means Models/full_250C.pk"
+FILE = "K-Means Models/full_500C.pk"
 
 # Load using pickle
 word_centroid_map =  pickle.load(open(FILE,"rb"))
@@ -38,5 +38,5 @@ for cluster_num in range(0, total_clusters):
     array_dict.append(cluster_dict)
 
 # Save the array
-FILE = "Word Dictionaries/dict_250C.pk"
+FILE = "Word Dictionaries/dict_500C.pk"
 pickle.dump(array_dict, open("Word Dictionaries/dict_250C.pk", "wb"))
