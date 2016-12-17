@@ -1,6 +1,8 @@
 import pickle
 import os
 
+os.system('cls')
+
 # Specify the file
 FILE = "K-Means Models/full_250C.pk"
 
@@ -17,6 +19,11 @@ array_dict = []
 # Loop cluster by cluster
 for cluster_num in range(0, total_clusters):
     
+    # Progress report for every 50 clusters
+    if (len(array_dict) % 50 == 0):
+
+    	print("%i clusters stored" % (len(array_dict)))
+
     # Create a dictionary
     cluster_dict = {}
 
@@ -30,10 +37,6 @@ for cluster_num in range(0, total_clusters):
     # Append to array
     array_dict.append(cluster_dict)
 
-    # Progress report for every 50 clusters
-    if len(array_dict) % 50 == 0:
-    	print("%i clusters stored" % (len(array_dict)))
-
- # Save the array
- FILE = "Word Dictionaries/dict_250C.pk"
- pickle.dump(array_dict, open(FILE, "wb"))
+# Save the array
+FILE = "Word Dictionaries/dict_250C.pk"
+pickle.dump(array_dict, open("Word Dictionaries/dict_250C.pk", "wb"))
