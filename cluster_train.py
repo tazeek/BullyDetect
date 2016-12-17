@@ -17,7 +17,7 @@ def doClustering():
 	# Specify the number of words and clusters (250,500,1000,2000)
 	# NOTE: When utilizing full Word2Vec power, ignore WORDS
 	#WORDS = 600000
-	CLUSTERS = 250
+	CLUSTERS = 500
 
 	# Get the word vectors and the word
 	print("GETTING WORD VECTORS AND WORDS \n\n")
@@ -46,7 +46,7 @@ def doClustering():
 
 	# Save the dictionary
 	print("\n\nSAVING MODEL")
-	FILE = "K-Means Models/testing.pk"
+	FILE = "K-Means Models/full_500C.pk"
 	pickle.dump(word_centroid_map, open(FILE, "wb"))
 
 if __name__ == '__main__':
