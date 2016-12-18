@@ -29,10 +29,19 @@ def transformation(comments, cluster_dictionary):
 
 	# Find number of clusters
 	clusters = max(cluster_dictionary.values()) + 1
-	print(clusters)
 
 	# Pre-allocate an array for the transformation (for speed)
 	centroids_bag = np.zeros(len(comments), clusters)
+
+	# Loop over comment by comment
+	for i, comment in enumerate(comments):
+
+		# Overwrite current row with transformed data
+		centroids_bag[i] = createBagCentroids(comment, clusters, cluster_dictionary)
+
+
+	print(centroids_bag)
+	return centroids_bag
 
 # Function to load the cluster dictionary
 def loadClusterSet(FILE):
