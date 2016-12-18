@@ -5,22 +5,19 @@ import pandas as pd
 import numpy as np 
 
 # Transform the data
-def createBagCentroids(comment):
+def createBagCentroids(comment, clusters, cluster_dictionary):
 
 	# Pre-allocate the bag of centroids vector (for speed)
-	bag_of_centroids = np.zeros( total_clusters_500, dtype="float32" )
+	bag_of_centroids = np.zeros( clusters, dtype="float32" )
 
 	# Loop word by word
-	for word in SENTENCE.split():
+	for word in comment.split():
 	    
 	    # Check if word is in dictionary
-	    if word in word_centroid_map_500:
+	    if word in cluster_dictionary:
 	        
 	        # Get index of the word
-	        index = word_centroid_map_500[word]
-	        
-	        # Print for evalution
-	        print(word, index)
+	        index = cluster_dictionary[word]
 	        
 	        # Increment index of bag_of_centroids
 	        bag_of_centroids[index] += 1
@@ -28,6 +25,14 @@ def createBagCentroids(comment):
 	return bag_of_centroids
 
 # Read in comment by comment
+def transformation(comments, cluster_dictionary):
+
+	# Find number of clusters
+	clusters = max(cluster_dictionary.values()) + 1
+	print(clusters)
+
+	# Pre-allocate an array for the transformation (for speed)
+	centroids_bag = np.zeros(len(comments), clusters)
 
 # Function to load the cluster dictionary
 def loadClusterSet(FILE):
@@ -52,3 +57,5 @@ FILE = "K-Means Models/full_500C.pk"
 cluster_dictionary = loadClusterSet(FILE)
 
 # Transform the data 
+print("TRANSFORMING DATA \n\n")
+transformation(X, cluster_dictionary)
