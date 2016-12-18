@@ -7,29 +7,38 @@ import numpy as np
 from evaluation import evaluate
 
 # Transform the data
+# Use the number of clusters as comment length
 def createBagCentroids(comment, clusters, cluster_dictionary):
 
 	# Pre-allocate the bag of centroids vector (for speed)
-	bag_of_centroids = np.zeros( clusters, dtype="float32" )
+	pos_centroids = np.zeros( (clusters,), dtype="float32" )
 
 	# Loop word by word
-	for word in comment.split():
+	for i,word in enumerate(comment.split()):
 	    
 	    # Check if word is in dictionary
+	    # If word is not in dictionary, assign it as -1
 	    if word in cluster_dictionary:
-	        
-	        # Get index of the word
-	        index = cluster_dictionary[word]
-	        
-	        # Increment index of bag_of_centroids
-	        bag_of_centroids[index] += 1
 
-	return bag_of_centroids
+	    	index = cluster_dictionary[word] + 1
+
+	    else:
+
+	    	index = -1.0
+	        
+	    # Increment index of bag_of_centroids
+	    pos_centroids[i] = index
+
+	    # If reached last point, then break out
+	    if i+1 == len(pos_centroids):
+	    	break
+
+	return pos_centroids
 
 # Read in comment by comment
 def transformation(comments, cluster_dictionary):
 
-	# Find number of clusters
+	# Use number of clusters as comment length
 	clusters = max(cluster_dictionary.values()) + 1
 
 	# Pre-allocate an array for the transformation (for speed)
