@@ -4,6 +4,8 @@ import os
 import pandas as pd
 import numpy as np 
 
+from evaluation import evaluate
+
 # Transform the data
 def createBagCentroids(comment, clusters, cluster_dictionary):
 
@@ -31,16 +33,20 @@ def transformation(comments, cluster_dictionary):
 	clusters = max(cluster_dictionary.values()) + 1
 
 	# Pre-allocate an array for the transformation (for speed)
-	centroids_bag = np.zeros(len(comments), clusters)
+	centroids_bag = np.zeros((len(comments), clusters), dtype="float32")
+
+	# Initialize counter
+	counter = 0
 
 	# Loop over comment by comment
-	for i, comment in enumerate(comments):
+	for comment in comments:
 
 		# Overwrite current row with transformed data
-		centroids_bag[i] = createBagCentroids(comment, clusters, cluster_dictionary)
+		centroids_bag[counter] = createBagCentroids(comment, clusters, cluster_dictionary)
 
+		# Increment counter
+		counter += 1
 
-	print(centroids_bag)
 	return centroids_bag
 
 # Function to load the cluster dictionary
@@ -67,4 +73,11 @@ cluster_dictionary = loadClusterSet(FILE)
 
 # Transform the data 
 print("TRANSFORMING DATA \n\n")
-transformation(X, cluster_dictionary)
+X = transformation(X, cluster_dictionary)
+
+# Get the Python's file name. Remove the .py extension
+file_name = os.path.basename(__file__)
+file_name = file_name.replace(".py","")
+
+# Send in for evaluation
+evaluate(X,y, file_name)
