@@ -1,7 +1,12 @@
 import pickle
+import os
 
 import pandas as pd
 import numpy as np 
+
+# Transform the data
+
+# Read in comment by comment
 
 # Function to load the cluster dictionary
 def loadClusterSet(FILE):
@@ -10,6 +15,8 @@ def loadClusterSet(FILE):
 	word_centroid_map = pickle.load(open(FILE,"rb"))
 
 	return word_centroid_map
+
+os.system('cls')
 
 # Load the dataset here
 print("LOADING DATASET \n\n")
@@ -22,3 +29,5 @@ X , y = df['Comment'], df['Insult']
 print("LOADING CLUSTER DICTIONARY \n\n")
 FILE = "K-Means Models/full_500C.pk"
 cluster_dictionary = loadClusterSet(FILE)
+
+# Transform the data 
