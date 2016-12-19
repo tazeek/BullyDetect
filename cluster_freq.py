@@ -15,14 +15,17 @@ def createBagCentroids(comment, clusters, cluster_dictionary):
 	# Loop word by word
 	for word in comment.split():
 	    
+	    # Assume word is not in dictionary
+	    index = -1
+
 	    # Check if word is in dictionary
 	    if word in cluster_dictionary:
 	        
 	        # Get index of the word
 	        index = cluster_dictionary[word]
-	        
-	        # Increment index of bag_of_centroids
-	        bag_of_centroids[index] += 1
+
+	    # Increment index of bag_of_centroids
+	    bag_of_centroids[index] += 1
 
 	return bag_of_centroids
 
@@ -30,7 +33,8 @@ def createBagCentroids(comment, clusters, cluster_dictionary):
 def transformation(comments, cluster_dictionary):
 
 	# Find number of clusters
-	clusters = max(cluster_dictionary.values()) + 1
+	# Use extra cluster to store unseen words. This is the last cluster
+	clusters = max(cluster_dictionary.values()) + 2
 
 	# Pre-allocate an array for the transformation (for speed)
 	centroids_bag = np.zeros((len(comments), clusters), dtype="float32")
