@@ -3,6 +3,7 @@ import pickle
 import os
 import logging
 import datetime
+import multiprocessing
 
 import numpy as np 
 
@@ -19,8 +20,8 @@ def doClustering():
 	model = w2v.load_word2vec_format('W2V Models/w2v_reddit_unigram_300d.bin', binary=True)
 
 	# Specify the number of words and clusters (250,500,1000,2000,4000)
-	WORDS = 10000
-	CLUSTERS = 250
+	WORDS = 100000
+	CLUSTERS = 1000
 
 	# Get the word vectors and the word
 	print("GETTING WORD VECTORS AND WORDS \n\n")
@@ -52,7 +53,7 @@ def doClustering():
 	time.sleep(10)
 
 	# Initialize K-Means
-	k_means = KMeans( n_clusters = CLUSTERS, n_jobs=6, precompute_distances=True)
+	k_means = KMeans( n_clusters = CLUSTERS, n_jobs=multiprocessing.cpu_count(), precompute_distances=True)
 
 	# Give starting time of initialization
 	start = datetime.datetime.now()
@@ -64,6 +65,9 @@ def doClustering():
 	idx = k_means.fit_predict(pca_result)
 	end = time.time()
 
+	# Display ending time of fitting
+	end = datetime.datetime.now()
+	print("EMDING AT:  %i/%i/%i %i:%i" % (start.month, start.day, start.year, start.hour, start.minute))
 	print("TIME TAKEN: ", end-start)
 
 	# Create a Word / Index dictionary
