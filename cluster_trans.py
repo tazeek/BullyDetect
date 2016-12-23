@@ -31,7 +31,7 @@ def getAverageCluster(word_list, model):
 # Load the Cluster dictionary
 print("LOADING CLUSTER DICTIONARY \n\n")
 
-cluster_num = 500
+cluster_num = 250
 FILE = "Word Dictionaries/dict_" + str(cluster_num) + "C.pk"
 array_dict_cluster = pickle.load(open(FILE, "rb"))
 
