@@ -17,13 +17,9 @@ normal_df.reset_index(inplace=True, drop=True)
 # Get N + 10 number of true negatives
 # Sample without replacement
 N = len(bully_df) + 10 
-
-comments_array = np.random.choice(normal_df['Comment'], N, replace=False)
-new_normal_df = normal_df.sample(n=N, replace=False)
+random_numbers = random.sample(range(0, len(normal_df)), N)
+new_normal_df = normal_df.iloc[random_numbers]
 
 # Reset index and drop duplicates, if any
-print(len(new_normal_df))
-new_normal_df.drop_duplicates(inplace=True)
 new_normal_df.reset_index(inplace=True, drop=True)
 
-print(len(new_normal_df))
