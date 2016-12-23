@@ -1,5 +1,4 @@
 import pandas as pd 
-import numpy as np 
 
 # Load in the full dataframe
 df = pd.read_csv('clean_dataset.csv')
@@ -12,4 +11,13 @@ normal_df = df[df['Insult'] == 0]
 bully_df.reset_index(inplace=True, drop=True)
 normal_df.reset_index(inplace=True, drop=True)
 
-print(normal_df.head())
+# Get N number of true negatives
+# Sample without replacement
+N = len(bully_df)
+
+new_normal_df = normal_df.sample(n=N, replace=False)
+
+# Drop index
+new_normal_df.reset_index(inplace=True, drop=True)
+
+print(new_normal_df.head(10))
