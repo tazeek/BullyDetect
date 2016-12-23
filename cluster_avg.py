@@ -8,13 +8,46 @@ from gensim.models import Word2Vec as w2v
 
 from evaluation import evaluate
 
-def getAverageComment():
+def getAverageComment(sentence, cluster_dict, cluster_map, num_features):
 
-	return
+	# Pre-initialize an empty numpy array (for speed)
+	featureVec = np.zeros((num_features,),dtype="float32")
+
+	# Count number of words
+	nwords = 0.
+
+	# Loop over word by word
+	# If in vocabulary, add its feature vector to the total
+	for word in sentence.split():
+
+		print(word)
+		#if word in model: #and word not in stop_words:
+		#	nwords += 1.
+		#	featureVec = np.add(featureVec,model[word])
+
+	# Divide the result by the number of words to get the average
+	featureVec = np.divide(featureVec,nwords)
+
+	return featureVec
 
 def transformData(comments, cluster_dict, cluster_map, num_features):
 
-	return
+	# Initialize empty counter
+	counter = 0
+
+	# Preallocate a 2D numpy array for speed
+	reviewFeatureVecs = np.zeros((len(comments),num_features),dtype="float32")
+
+	for comment in comments:
+
+		# Call function that gets the average vectors
+		reviewFeatureVecs[counter] = getAverageComment(comment, cluster_dict, cluster_map, num_features)
+
+		# Increment counter
+		counter += 1
+
+
+	return reviewFeatureVecs
 
 os.system('cls')
 # Load the dataset here
@@ -35,10 +68,11 @@ FILE_CLUS = "C:/Users/MyPC/Desktop/Vegito/K-Means Models/full_" + str(cluster_fi
 array_dict_cluster = pickle.load(open(FILE_DICT, "rb"))
 word_centroid_map =  pickle.load(open(FILE_CLUS,"rb"))
 
-# Load dataset
-
+# Transform data
+print("TRANSFORMING DATA \n\n")
+X = transformData(X, array_dict_cluster, word_centroid_map, 300)
 
 # Find index number of word 
 # Then load all related words 
-cluster_num = word_centroid_map[word]
-words_list = array_dict_cluster[cluster_num]['average_vector']
+#cluster_num = word_centroid_map[word]
+#words_list = array_dict_cluster[cluster_num]['average_vector']

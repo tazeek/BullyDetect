@@ -6,6 +6,20 @@ from gensim.models import Word2Vec as w2v
 
 from evaluation import evaluate
 
+def characterVec(words, model, num_features):
+	featureVec = np.zeros((num_features,), dtype="float32")
+
+	nwords = 0.
+
+	for word in words:
+
+		nwords += 1.
+		featureVec = np.add(featureVec, model[word])
+
+	featureVec = np.divide(featureVec, nwords)
+
+	return featureVec
+
 # One of the kaggle tests
 def makeFeatureVec(words, model, num_features):
 
@@ -17,7 +31,7 @@ def makeFeatureVec(words, model, num_features):
 
 	# Loop over word by word
 	# If in vocabulary, add its feature vector to the total
-	for word in words:
+	for word in words.split():
 
 		if word in model: #and word not in stop_words:
 			nwords += 1.
@@ -25,7 +39,11 @@ def makeFeatureVec(words, model, num_features):
 
 	# Divide the result by the number of words to get the average
 	featureVec = np.divide(featureVec,nwords)
-
+	
+	# If number of words zero
+	if nwords == 0:
+		featureVec = characterVec(words, model, num_features)
+	
 	return featureVec
 
 # One of the kaggle tests
@@ -71,4 +89,5 @@ file_name = os.path.basename(__file__)
 file_name = file_name.replace(".py","")
 
 # Evaluate models 
+print("EVALUATING \n\n")
 evaluate(X,y, file_name)
