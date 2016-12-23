@@ -20,6 +20,10 @@ N = len(bully_df) + 10
 random_numbers = random.sample(range(0, len(normal_df)), N)
 new_normal_df = normal_df.iloc[random_numbers]
 
-# Reset index and drop duplicates, if any
+# Reset index
 new_normal_df.reset_index(inplace=True, drop=True)
 
+# Combine the dataframes
+balanced_df = pd.concat([bully_df, new_normal_df])
+
+print(balanced_df.head(30))
