@@ -26,4 +26,8 @@ new_normal_df.reset_index(inplace=True, drop=True)
 # Combine the dataframes
 balanced_df = pd.concat([bully_df, new_normal_df])
 
-print(balanced_df.head(30))
+# Shuffle the balanced dataframe
+balanced_df = balanced_df.sample(frac=1).reset_index(drop=True)
+
+# Save the file
+balanced_df.to_csv('balanced_dataset.csv', index=False)
