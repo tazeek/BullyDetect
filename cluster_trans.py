@@ -46,6 +46,11 @@ print("STARTING TRANSFORMATIONS \n\n")
 
 for index,cluster in enumerate(array_dict_cluster):
 
+	# Print update
+	if index % 10 == 0:
+
+		print("%i Clusters out of %i transformed" % (index, len(array_dict_cluster)))
+
 	# Get the word list 
 	words = cluster['word_list']
 	
@@ -54,9 +59,6 @@ for index,cluster in enumerate(array_dict_cluster):
 
 	# Store in new key
 	cluster['average_vector'] = avg_cluster
-
-
-	break
 
 # Save the File
 FILE = "Word Dictionaries/trans_dict_" + str(cluster_num) + "C.pk"
