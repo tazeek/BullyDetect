@@ -15,7 +15,7 @@ def characterVec(words, model, num_features):
 	for word in words:
 
 		nwords += 1.
-		featureVec = np.add(featureVec, model[word])
+		featureVec = np.add(featureVec, vector_dict[word])
 
 	featureVec = np.divide(featureVec, nwords)
 
@@ -36,7 +36,7 @@ def makeFeatureVec(words, model, vector_dict, num_features):
 
 		if word in model: #and word not in stop_words:
 			nwords += 1.
-			featureVec = np.add(featureVec,model[word])
+			featureVec = np.add(featureVec,vector_dict[word])
 
 	# Divide the result by the number of words to get the average
 	featureVec = np.divide(featureVec,nwords)

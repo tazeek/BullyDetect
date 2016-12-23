@@ -8,6 +8,24 @@ from gensim.models import Word2Vec as w2v
 
 from evaluation import evaluate
 
+def characterVec(word, cluster_dict, cluster_map, num_features):
+	featureVec = np.zeros((num_features,), dtype="float32")
+
+	n_char = 0.
+
+	for character in word:
+
+		n_char += 1.
+
+		cluster_num = cluster_map[character]
+		avg_vector = array_dict_cluster[cluster_num]['average_vector']
+
+		featureVec = np.add(featureVec,avg_vector)
+
+	featureVec = np.divide(featureVec, n_char)
+
+	return featureVec 
+
 def getAverageComment(sentence, cluster_dict, cluster_map, num_features):
 
 	# Pre-initialize an empty numpy array (for speed)
@@ -20,13 +38,20 @@ def getAverageComment(sentence, cluster_dict, cluster_map, num_features):
 	# If in vocabulary, add its feature vector to the total
 	for word in sentence.split():
 
-		print(word)
-		#if word in model: #and word not in stop_words:
-		#	nwords += 1.
-		#	featureVec = np.add(featureVec,model[word])
+		if word in cluster_map: #and word not in stop_words:
+
+			nwords += 1.
+
+			cluster_num = cluster_map[word]
+			avg_vector = cluster_dict[cluster_num]['average_vector']
+
+			featureVec = np.add(featureVec,avg_vector)
 
 	# Divide the result by the number of words to get the average
 	featureVec = np.divide(featureVec,nwords)
+
+	if nwords == 0:
+		featureVec = characterVec(sentence, cluster_dict, cluster_map, num_features)
 
 	return featureVec
 
@@ -72,7 +97,9 @@ word_centroid_map =  pickle.load(open(FILE_CLUS,"rb"))
 print("TRANSFORMING DATA \n\n")
 X = transformData(X, array_dict_cluster, word_centroid_map, 300)
 
-# Find index number of word 
-# Then load all related words 
-#cluster_num = word_centroid_map[word]
-#words_list = array_dict_cluster[cluster_num]['average_vector']
+# Get the Python's file name. Remove the .py extension
+file_name = os.path.basename(__file__)
+file_name = file_name.replace(".py","")
+
+# Evaluate models 
+evaluate(X,y, file_name)
