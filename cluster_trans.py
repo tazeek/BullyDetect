@@ -30,24 +30,34 @@ def getAverageCluster(word_list, model):
 
 # Load the Cluster dictionary
 print("LOADING CLUSTER DICTIONARY \n\n")
+
 cluster_num = 500
 FILE = "Word Dictionaries/dict_" + str(cluster_num) + "C.pk"
 array_dict_cluster = pickle.load(open(FILE, "rb"))
 
 # Load Word2Vec model 
 print("LOADING WORD2VEC MODEL \n\n")
+
 FILE = "W2V Models/w2v_reddit_unigram_300d.bin"
 model = w2v.load_word2vec_format(FILE, binary=True)
 
 # Loop cluster by cluster
 print("STARTING TRANSFORMATIONS \n\n")
-for cluster in array_dict_cluster:
+
+for index,cluster in enumerate(array_dict_cluster):
 
 	# Get the word list 
 	words = cluster['word_list']
 	
 	# Call the function
-	getAverageCluster(words, model)
+	avg_cluster = getAverageCluster(words, model)
+
+	# Store in new key
+	cluster['average_vector'] = avg_cluster
+
+
 	break
 
-exit()
+# Save the File
+FILE = "Word Dictionaries/trans_dict_" + str(cluster_num) + "C.pk"
+pickle.dump(array_dict_cluster, open(FILE, "wb"))
