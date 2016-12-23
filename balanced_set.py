@@ -8,5 +8,8 @@ df = pd.read_csv('clean_dataset.csv')
 bully_df = df[df['Insult'] == 1]
 normal_df = df[df['Insult'] == 0]
 
-print(len(bully_df))
-print(len(normal_df))
+# Reset index after separating
+bully_df.reset_index(inplace=True, drop=True)
+normal_df.reset_index(inplace=True, drop=True)
+
+print(normal_df.head())
