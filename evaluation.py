@@ -22,8 +22,10 @@ sns.set_style('whitegrid')
 # Note that only precision is taken into account
 def plotLearningCurve(model, model_name, X, y, skv, file_name):
 
+	print("PLOTTING LEARNING CURVE FOR %s \n\n" % (model_name))
+
 	# Save title
-	plt.title("Learning curve of " + model_name + "(" + file_name + ")")
+	plt.title("Learning curve of " + model_name + " (" + file_name + ")")
 
 	# X and Y labels
 	plt.xlabel('Training examples')
@@ -38,21 +40,17 @@ def plotLearningCurve(model, model_name, X, y, skv, file_name):
 	test_scores_mean = np.mean(test_scores, axis=1)
 
 	# Fill in with matplotlib
-	plt.fill_between(train_sizes, train_scores_mean - train_scores_std,
-		train_scores_mean + train_scores_std, alpha=0.1, color="r")
-
-	plt.fill_between(train_sizes, test_scores_mean - test_scores_std, 
-		test_scores_mean - test_scores_std, alpha=0.1, color="g")
-
 	plt.plot(train_sizes, train_scores_mean, 'o-', color="r")
 	plt.plot(train_sizes, test_scores_mean, 'o-', color="g")
 
 	# Position the legend
-	plt.legend(loc="best")
+	plt.legend(loc="lower left")
 
 	# Save in png format
-	plt.savefig('test.png')
-	exit()
+	FILE = "Learning Curves/" + model_name + "_" + file_name + ".png"
+	plt.savefig(FILE)
+
+	print("PLOTTING OVER \n\n")
 
 def evaluatingModel(model, model_name, X, y, skv, file_name):
 
