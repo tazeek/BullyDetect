@@ -57,7 +57,7 @@ def evaluatingModel(model, model_name, X, y, skv, file_name):
 	# Create Confusion Matrix Dictionary
 	cm_dict = { "tp": 0, "fp": 0, "tn": 0, "fn": 0}
 
-	print(model_name + " STARTS HERE\n\n")
+	print("CLASSIFICATION FOR " + model_name + " STARTS HERE\n\n")
 
 	# Array to store results
 	accuracy_array = []
@@ -154,7 +154,7 @@ def evaluatingModel(model, model_name, X, y, skv, file_name):
 	print("MEAN BRIER SCORE LOSS: %0.2f (+/- %0.2f) \n" % (mean_brier, brier_std))
 	print("MEAN RUN TIME: %0.2f (+/- %0.2f) \n" % (mean_execution_time, run_std))
 
-	print("\n\n" + model_name + " STOPS HERE\n\n")
+	print("\n\nCLASSIFICATION FOR " + model_name + " STOPS HERE\n\n")
 
 	# Save the confusion matrix using pickle
 	FILE = "Confusion Matrix/" + model_name.lower() + "_" + file_name + ".pk"
@@ -177,5 +177,5 @@ def evaluate(X, y, file_name):
 
 	for key, value in models.items():
 
-		plotLearningCurve(value, key, X, y, skf, file_name)
+		#plotLearningCurve(value, key, X, y, skf, file_name)
 		evaluatingModel(value, key, X, y, skf, file_name)
