@@ -3,6 +3,8 @@ import os
 import pickle
 
 import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 from sklearn.naive_bayes import GaussianNB
 from sklearn.svm import LinearSVC
@@ -13,8 +15,44 @@ from sklearn.model_selection import StratifiedKFold, learning_curve
 
 from sklearn.metrics import accuracy_score, roc_auc_score, confusion_matrix, log_loss, brier_score_loss
 
-# Plot the learning curve and save
-def learningCurves(model, model_name, X, y, skv, file_name):
+# Set style of plot grid
+sns.set_style('whitegrid')
+
+# Plot the learning curve and save it
+# Note that only precision is taken into account
+def plotLearningCurve(model, model_name, X, y, skv, file_name):
+
+	# Save title
+	plt.title("Learning curve of " + model_name + "(" + file_name + ")")
+
+	# X and Y labels
+	plt.xlabel('Training examples')
+	plt.ylabel('Scores')
+
+	# Generate variables from learning curve
+	train_sizes, train_scores, test_scores = learning_curve(model, X, y, 
+		cv=skv, scoring= 'precision')
+
+	# Get mean scores and std
+	train_scores_mean = np.mean(train_scores, axis=1)
+	test_scores_mean = np.mean(test_scores, axis=1)
+
+	# Fill in with matplotlib
+	plt.fill_between(train_sizes, train_scores_mean - train_scores_std,
+		train_scores_mean + train_scores_std, alpha=0.1, color="r")
+
+	plt.fill_between(train_sizes, test_scores_mean - test_scores_std, 
+		test_scores_mean - test_scores_std, alpha=0.1, color="g")
+
+	plt.plot(train_sizes, train_scores_mean, 'o-', color="r")
+	plt.plot(train_sizes, test_scores_mean, 'o-', color="g")
+
+	# Position the legend
+	plt.legend(loc="best")
+
+	# Save in png format
+	plt.savefig('test.png')
+	exit()
 
 def evaluatingModel(model, model_name, X, y, skv, file_name):
 
@@ -140,4 +178,6 @@ def evaluate(X, y, file_name):
 	skf = StratifiedKFold(n_splits=10, shuffle=True)
 
 	for key, value in models.items():
+
+		plotLearningCurve(value, key, X, y, skf, file_name)
 		evaluatingModel(value, key, X, y, skf, file_name)
