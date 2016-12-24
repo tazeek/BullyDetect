@@ -1,3 +1,5 @@
+from gensim.models import Word2Vec as w2v
+
 def getSoundex(word):
     
     # Uppercase the word
@@ -5,6 +7,11 @@ def getSoundex(word):
 
     # Get the first letter of the word
     soundex = word[0]
+
+    # Skip the following letters
+    skip_dict = "HW"
+    word = [letter for letter in word[1:] if letter not in skip_dict]
+    word = "".join(word)
 
     # Create soundex dictionary
     dictionary = {"BFPV": "1", "CGJKQSXZ":"2", "DT":"3", "L":"4", 
@@ -35,4 +42,7 @@ def getSoundex(word):
     return soundex
 
 # Testing
-print(getSoundex("Ashcraft"))
+print(getSoundex("Gutierrez"))
+
+# Load word2vec model 
+print("LOADING MODEL")
