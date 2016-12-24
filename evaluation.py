@@ -9,9 +9,12 @@ from sklearn.svm import LinearSVC
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 
-from sklearn.model_selection import StratifiedKFold
+from sklearn.model_selection import StratifiedKFold, learning_curve
 
 from sklearn.metrics import accuracy_score, roc_auc_score, confusion_matrix, log_loss, brier_score_loss
+
+# Plot the learning curve and save
+def learningCurves(model, model_name, X, y, skv, file_name):
 
 def evaluatingModel(model, model_name, X, y, skv, file_name):
 
