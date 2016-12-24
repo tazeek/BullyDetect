@@ -1,4 +1,5 @@
-from gensim.models import Word2Vec as w2v
+from contractions import soundex_dictionary
+import pickle
 
 def getSoundex(word):
     
@@ -13,27 +14,15 @@ def getSoundex(word):
     word = [letter for letter in word[1:] if letter not in skip_dict]
     word = "".join(word)
 
-    # Create soundex dictionary
-    dictionary = {"BFPV": "1", "CGJKQSXZ":"2", "DT":"3", "L":"4", 
-        "MN":"5", "R":"6", "AEIOUHWY":"."}
-
     # Loop character by character (Start with 2nd character)
-    for char in word[1:]:
-        
-        # Loop key-by-key
-        for key in dictionary.keys():
-            
-            # Check if the character is in key list
-            if char in key:
-                
-                # Variable to store the code
-                # Ignore if it is the same as last letter
-                code = dictionary[key]
-                
-                if code != soundex[-1]:
-                    soundex += code
+    for char in word[0:]:
 
-    # Replace vowels and HWY 
+        code = soundex_dictionary[char]
+
+        if code != soundex[-1]:
+            soundex += code
+
+    # Replace period characters
     soundex = soundex.replace(".", "")
 
     # If the string has only one character, append rest with three 0s.
@@ -41,8 +30,30 @@ def getSoundex(word):
 
     return soundex
 
-# Testing
-print(getSoundex("Gutierrez"))
 
-# Load word2vec model 
-print("LOADING MODEL")
+# Load K-Means model here
+# We use this over W2V model, due to memory constraints and loading time
+FILE = "K-Means Models/full_500C.pk"
+word_centroid_map =  pickle.load(open(FILE,"rb"))
+
+# Create dictionary
+soundex_dict = {}
+
+# Loop one pair at a time
+# Word is stored in key
+counter = 0
+
+for key, value in word_centroid_map.items():
+
+    soundex_key = getSoundex(key)
+
+    soundex_dict[key] = soundex_key
+
+    if counter % 10000 == 0:
+        print("%i words encoded" % (counter))
+
+    counter += 1
+
+# Save dictionary 
+FILE = "Word Dictionaries/soundex_dict.pk"
+pickle.dump(soundex_dict, open(FILE, "wb"))
