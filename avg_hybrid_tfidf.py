@@ -99,11 +99,11 @@ model = w2v.load_word2vec_format(FILE, binary=True)
 
 # Load TF-IDF Model Here
 print("LOADING TFIDF DICTIONARY \n\n")
-FILE = "TFIDF models/tfidf_stop.pk"
+FILE = "TFIDF models/tfidf_normal.pk"
 tfidf_model = getTFIDIF(FILE)
 
 # Load the dataset here
-df = pd.read_csv('clean_dataset.csv')
+df = pd.read_csv('balanced_dataset.csv')
 
 # Separate out comments and labels
 X , y = df['Comment'], df['Insult']

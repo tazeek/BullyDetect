@@ -101,7 +101,7 @@ def getTFIDIF(FILE):
 os.system('cls')
 # Load the dataset here
 print("LOADING DATASET \n\n")
-df = pd.read_csv('clean_dataset.csv')
+df = pd.read_csv('balanced_dataset.csv')
 
 # Separate out comments and labels
 X , y = df['Comment'], df['Insult']

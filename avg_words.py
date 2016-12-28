@@ -33,7 +33,7 @@ def makeFeatureVec(words, model, num_features):
 	# If in vocabulary, add its feature vector to the total
 	for word in words.split():
 
-		if word in model: #and word not in stop_words:
+		if word in model: 
 			nwords += 1.
 			featureVec = np.add(featureVec,model[word])
 
@@ -75,7 +75,7 @@ model = w2v.load_word2vec_format(FILE, binary=True)
 
 # Load the dataset here
 print("LOADING DATASET \n\n")
-df = pd.read_csv('clean_dataset.csv')
+df = pd.read_csv('balanced_dataset.csv')
 
 # Separate out comments and labels
 X , y = df['Comment'], df['Insult']
