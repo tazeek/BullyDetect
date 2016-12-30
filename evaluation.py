@@ -132,10 +132,20 @@ def evaluate(X, y, file_name):
 	# Store them in a dicitonary
 	models = { "NB": nb, "SVM": svm, "RF": rf}
 
+	# Initialize directory
+	DIR = "ML Models/"
+
 
 	# Test with 10 fold Cross validation/Stratified K Fold
 	skf = StratifiedKFold(n_splits=10, shuffle=True)
 
 	for key, value in models.items():
 
-		evaluatingModel(value, key, X, y, skf, file_name)
+		#evaluatingModel(value, key, X, y, skf, file_name)
+		FILE = DIR + key.lower() + "_" + file_name + ".sav"
+
+		# Train the model fully
+		value.fit(X,y)
+
+		# Save the model 
+		pickle.dump(key, open(FILE, 'wb'))
