@@ -114,7 +114,10 @@ contractions = {
 "you'll": "you will",
 "you'll've": "you will have",
 "you're": "you are",
-"you've": "you have"
+"you've": "you have",
+"u" : "you",
+"ur": "your",
+"yur": "your"
 }
 
 soundex_dictionary = {

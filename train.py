@@ -17,20 +17,11 @@ class MySentences():
 
 		client = MongoClient() # First: Connect to MongoDB
 		db = client['reddit'] # Second: Connect to Database
-		collection = db['full_2'] # Third: Get collection list
+		collection = db['full_3'] # Third: Get collection list
 
 		for fragments in collection.find():
 			for sentence in fragments['sentence_list']:
 				yield sentence
-
-		#for month in collection_list:
-		#	collection = db[month] # Third: Get the collections
-
-
-		#	for fragments in collection.find():
-
-		#		for sentence in fragments['sentence_list']:
-		#			yield sentence
 
 
 
