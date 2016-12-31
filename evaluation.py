@@ -1,6 +1,7 @@
 import time
 import os
 import pickle
+import xgboost as xgb 
 
 import numpy as np
 
@@ -118,8 +119,8 @@ def evaluatingModel(model, model_name, X, y, skv, file_name):
 	print("\n\nCLASSIFICATION FOR " + model_name + " STOPS HERE\n\n")
 
 	# Save the confusion matrix using pickle
-	FILE = "Confusion Matrix (Balanced)/" + model_name.lower() + "_" + file_name + ".pk"
-	pickle.dump(cm_dict, open(FILE, "wb"))
+	#FILE = "Confusion Matrix (Balanced)/" + model_name.lower() + "_" + file_name + ".pk"
+	#pickle.dump(cm_dict, open(FILE, "wb"))
 
 def evaluate(X, y, file_name):
 
@@ -148,4 +149,4 @@ def evaluate(X, y, file_name):
 		value.fit(X,y)
 
 		# Save the model 
-		pickle.dump(key, open(FILE, 'wb'))
+		pickle.dump(value, open(FILE, 'wb'))
