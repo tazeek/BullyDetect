@@ -127,26 +127,26 @@ def evaluate(X, y, file_name):
 	# Implement Classifier(s) here and store in dictionary
 	print("INITLIAZING CLASSIFIERS \n\n")
 	nb = GaussianNB()
-	rf = RandomForestClassifier(n_estimators=100)
+	rf = RandomForestClassifier(n_estimators=200, max_depth=6)
 	svm = LinearSVC()
+	xgb_clf = xgb.XGBClassifier(max_depth=7)
 
 	# Store them in a dicitonary
-	models = { "NB": nb, "SVM": svm, "RF": rf}
+	models = { "NB": nb, "SVM": svm, "RF": rf, "XGB": xgb_clf}
 
 	# Initialize directory
 	DIR = "ML Models/"
-
 
 	# Test with 10 fold Cross validation/Stratified K Fold
 	skf = StratifiedKFold(n_splits=10, shuffle=True)
 
 	for key, value in models.items():
 
-		#evaluatingModel(value, key, X, y, skf, file_name)
-		FILE = DIR + key.lower() + "_" + file_name + ".sav"
+		evaluatingModel(value, key, X, y, skf, file_name)
+		#FILE = DIR + key.lower() + "_" + file_name + ".sav"
 
 		# Train the model fully
-		value.fit(X,y)
+		#value.fit(X,y)
 
 		# Save the model 
-		pickle.dump(value, open(FILE, 'wb'))
+		#pickle.dump(value, open(FILE, 'wb'))
