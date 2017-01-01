@@ -1,7 +1,7 @@
 import time
 import os
 import pickle
-
+import xgboost as xgb 
 import numpy as np
 import pandas as pd
 
@@ -128,13 +128,13 @@ def evaluatingModel(model, model_name, X, y, skv):
 	print("\n\n" + model_name + " STOPS HERE\n\n")
 
 	# Save the confusion matrix using pickle
-	FILE = "Confusion Matrix (Balanced)/" + model_name.lower() + "_" + file_name + ".pk"
-	pickle.dump(cm_dict, open(FILE, "wb"))
+	#FILE = "Confusion Matrix (Balanced)/" + model_name.lower() + "_" + file_name + ".pk"
+	#pickle.dump(cm_dict, open(FILE, "wb"))
 
 os.system('cls')
 
 # Load the dataset here
-df = pd.read_csv('balanced_dataset.csv')
+df = pd.read_csv('clean_dataset.csv')
 
 # Separate out comments and labels
 X , y = df['Comment'], df['Insult']
@@ -144,9 +144,10 @@ print("INITLIAZING CLASSIFIERS \n\n")
 nb = GaussianNB()
 rf = RandomForestClassifier(n_estimators=100)
 svm = LinearSVC()
+xgb_clf = xgb.XGBClassifier()
 
 # Store them in a dicitonary
-models = { "NB": nb, "SVM": svm, "RF": rf}
+models = { "NB": nb, "SVM": svm, "RF": rf, "XGB": xgb_clf}
 
 # Get the Python's file name. Remove the .py extension
 file_name = os.path.basename(__file__)

@@ -127,9 +127,9 @@ def evaluate(X, y, file_name):
 	# Implement Classifier(s) here and store in dictionary
 	print("INITLIAZING CLASSIFIERS \n\n")
 	nb = GaussianNB()
-	rf = RandomForestClassifier(n_estimators=200, max_depth=6)
+	rf = RandomForestClassifier(n_estimators=250, criterion='entropy')
 	svm = LinearSVC()
-	xgb_clf = xgb.XGBClassifier(max_depth=7)
+	xgb_clf = xgb.XGBClassifier()
 
 	# Store them in a dicitonary
 	models = { "NB": nb, "SVM": svm, "RF": rf, "XGB": xgb_clf}
