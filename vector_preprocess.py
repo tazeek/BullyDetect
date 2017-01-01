@@ -111,4 +111,9 @@ vector_dict = createVectorDictionary(unique_words, model)
 
 # Get overall mean cosine similarity 
 overall_cos_mean = np.mean(mean_cos_array)
-print("OVERALL MEAN: ", round(overall_cos_mean, 4))
+overall_cos_median = np.median(mean_cos_array)
+overall_cos_mode = np.bincount(mean_cos_array).argmax()
+
+print("COSINE MEAN: ", round(overall_cos_mean, 4))
+print("COSINE MEDIAN: ",  round(overall_cos_median, 4))
+print("COSINE MODE: ", round(overall_cos_mode, 4))
