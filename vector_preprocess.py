@@ -14,7 +14,7 @@ def wordsAverage(word, model):
 
 	# Get words that are similar. This returns tuples in a list
 	# Topn refers to the Top N words. 10 is default
-	top_n = 40
+	top_n = 50
 
 	# Get words that are similar. This returns tuples in a list
 	similar_words = model.most_similar(word, topn=top_n)
@@ -100,5 +100,5 @@ print("CREATING WORD-TRANSFORMED DICTIONARY\n\n")
 vector_dict = createVectorDictionary(unique_words, model)
 
 print("SAVING THE DICTIONARY")
-FILE = "Word Dictionaries/vect_dict_40.p"
+FILE = "Word Dictionaries/vect_dict_50.p"
 pickle.dump(vector_dict, open(FILE, "wb"))

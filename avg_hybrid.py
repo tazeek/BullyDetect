@@ -82,7 +82,7 @@ X , y = df['Comment'], df['Insult']
 
 # Load the dictionary
 print("LOADING DICTIONARY\n\n")
-FILE = "Word Dictionaries/vect_dict_10.p"
+FILE = "Word Dictionaries/vect_dict_5.p"
 vector_dict = pickle.load(open(FILE,"rb"))
 
 # Transform the data
