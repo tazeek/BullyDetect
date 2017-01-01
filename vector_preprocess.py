@@ -5,8 +5,12 @@ import os
 
 from gensim.models import Word2Vec as w2v
 
+mean_cos_array = []
+
 # Dr. Soon's idea 
 def wordsAverage(word, model):
+
+	global mean_cos_array
 
 	# Pre-initialize an empty numpy array (for speed)
 	# 300 is used, as it is the number of vectors in Word2Vec
@@ -14,17 +18,19 @@ def wordsAverage(word, model):
 
 	# Get words that are similar. This returns tuples in a list
 	# Topn refers to the Top N words. 10 is default
-	top_n = 50
+	top_n = 5
 
 	# Get words that are similar. This returns tuples in a list
 	similar_words = model.most_similar(word, topn=top_n)
 
-	# Calculate the Mean Cosine similarity among words
+	# Calculate the Mean Cosine similarity among words and append it to the array
 	mean_cos_distance = np.mean([ cos_distance for word, cos_distance in similar_words ])
+	mean_cos_array.append(mean_cos_distance)
 
 	# Get the collected words that are similar above this score. 
 	# Get the number of words as well
 	words_above_mean = [word for word, cos_distance in similar_words if cos_distance > mean_cos_distance]
+
 	total_words = float(len(words_above_mean))
 
 	# Loop over each word
@@ -99,6 +105,10 @@ unique_words = getUniqueWords(X)
 print("CREATING WORD-TRANSFORMED DICTIONARY\n\n")
 vector_dict = createVectorDictionary(unique_words, model)
 
-print("SAVING THE DICTIONARY")
-FILE = "Word Dictionaries/vect_dict_50.p"
-pickle.dump(vector_dict, open(FILE, "wb"))
+#print("SAVING THE DICTIONARY")
+#FILE = "Word Dictionaries/vect_dict_5.p"
+#pickle.dump(vector_dict, open(FILE, "wb"))
+
+# Get overall mean cosine similarity 
+overall_cos_mean = np.mean(mean_cos_array)
+print("OVERALL MEAN: ", round(overall_cos_mean, 4))
