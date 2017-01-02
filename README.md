@@ -20,9 +20,19 @@ were used:
 ## Unsupervised Learning
 
 The framework used is **Word2Vec Skip-Gram** model. The model was trained using comments from the **Reddit** corpus, from **January 2015**
-to **May 2015**.  Also, K-Means Clustering was used in conjunction with Word2Vec
+to **May 2015**.  Also, K-Means Clustering was used in conjunction with Word2Vec.
 
 [REDDIT CORPUS LIST](https://archive.org/download/2015_reddit_comments_corpus/reddit_data/)
 
+## Tools Used
 
-# Libraries
+**Python 3.5+** was used as the scripting language, while **MongoDB** was used to store the comments from reddit. Some of the main libraries used:
+
+- [Gensim][gensim]: For Word2Vec.
+- [Scikit-learn][sklearn]: For Machine Learning and Evaluation Metrics.
+- [Regex][regex]: For handling character-level expressions in text.
+
+
+[gensim]: https://radimrehurek.com/gensim/models/word2vec.html
+[sklearn]: http://scikit-learn.org/stable/index.html
+[regex]: https://docs.python.org/3/library/re.html
