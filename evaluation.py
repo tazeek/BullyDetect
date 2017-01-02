@@ -127,12 +127,12 @@ def evaluate(X, y, file_name):
 	# Implement Classifier(s) here and store in dictionary
 	print("INITLIAZING CLASSIFIERS \n\n")
 	nb = GaussianNB()
-	rf = RandomForestClassifier(n_estimators=100)
+	rf = RandomForestClassifier(n_estimators=175, criterion='entropy')
 	svm = LinearSVC()
-	#xgb_clf = xgb.XGBClassifier()
+	xgb_clf = xgb.XGBClassifier(n_estimators=150)
 
 	# Store them in a dicitonary
-	models = { "NB": nb, "SVM": svm, "RF": rf}
+	models = { "NB": nb, "SVM": svm, "RF": rf, "XGB": xgb_clf}
 
 	# Initialize directory
 	DIR = "ML Models/"
