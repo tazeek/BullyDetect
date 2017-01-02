@@ -20,9 +20,22 @@ were used:
 ## Unsupervised Learning
 
 The framework used is **Word2Vec Skip-Gram** model. The model was trained using comments from the **Reddit** corpus, from **January 2015**
-to **May 2015**.  Also, K-Means Clustering was used in conjunction with Word2Vec.
+to **May 2015**.  Also, K-Means Clustering was used in conjunction with Word2Vec. The skip-gram model is shown below:
+
+![Skip-gram model][sg-w2v]
 
 [REDDIT CORPUS LIST](https://archive.org/download/2015_reddit_comments_corpus/reddit_data/)
+
+## Methods used
+
+Some of the main methods used are:
+
+- **Average Words**: The most basic approach. Add the feature vectors of words, then divide by the total number of words.
+- **Mean Similarity**: Finding the feature vectors of words that are above a mean cosine similarity. This is done by finding the *top-n* words, and averaging their mean similarity. This is done word-by-word.
+- **Word Feature**: Using the mean feature of each specific word, provided it is in the model.
+- **Clustering Word Vectors**: Using K-Means Clustering to cluster a group of words together.
+
+Some of the above methods can be combined using the *TF-IDF* from the Kaggle Dataset
 
 ## Tools Used
 
@@ -33,6 +46,7 @@ to **May 2015**.  Also, K-Means Clustering was used in conjunction with Word2Vec
 - [Regex][regex]: For handling character-level expressions in text.
 
 
+[sg-w2v]: http://sebastianruder.com/content/images/2016/02/skip-gram.png
 [gensim]: https://radimrehurek.com/gensim/models/word2vec.html
 [sklearn]: http://scikit-learn.org/stable/index.html
 [regex]: https://docs.python.org/3/library/re.html
