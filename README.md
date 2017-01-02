@@ -37,6 +37,15 @@ Some of the main methods used are:
 
 Some of the above methods can be combined using the *TF-IDF* from the Kaggle Dataset
 
+## Evaluation and Results
+
+The following evaluation metrics were used after being cross-validated with **Stratified 10 Fold Sampling**: *Accuracy*, *Precision*, *False Positive Rate (FPR)*, *Area Under ROC*, *Log Loss*, *Brier Score Loss* and *Run-Time Prediction*. Due to the dataset being negatively skewed (about 75% non-bully comments), a lot of importance were put on **Precision**, **FPR**, *Brier Score Loss*, and *Run-Time Prediction*. The results are divided into two jupyter notebooks, based on two different datasets:
+
+- [Balanced Dataset][bala]: Using an even number of bully and non-bully comments
+- [Imbalanced Dataset][imba]: Using the full dataset
+
+Also, for evaluation of Word2Vec can be found [here][w2v-eval]
+
 ## Tools Used
 
 **Python 3.5+** was used as the scripting language, while **MongoDB** was used to store the comments from reddit. Some of the main libraries used:
@@ -50,3 +59,6 @@ Some of the above methods can be combined using the *TF-IDF* from the Kaggle Dat
 [gensim]: https://radimrehurek.com/gensim/models/word2vec.html
 [sklearn]: http://scikit-learn.org/stable/index.html
 [regex]: https://docs.python.org/3/library/re.html
+[w2v-eval]: https://github.com/tazeek/BullyDetect/blob/master/Python%20Notebooks/Word2Vec%20Evaluation.ipynb
+[bala]: https://github.com/tazeek/BullyDetect/blob/master/Python%20Notebooks/Results%20Visualisation%20(Balanced%20Dataset).ipynb
+[imba]: https://github.com/tazeek/BullyDetect/blob/master/Python%20Notebooks/Results%20Visualisation%20(Imbalanced%20Dataset).ipynb
