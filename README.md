@@ -11,6 +11,8 @@ were used:
 - Naive Bayes (Gaussian Model)
 - Support Vector Machines (Linear SVC)
 
+[KAGGLE DATASET LINK](https://www.kaggle.com/c/detecting-insults-in-social-commentary/data)
+
 **EXTRA**: Currently trying out the following approaches since the main phases are over:
 - Fine-tuning parameters of machine learning approaches
 - Using XGBoost for a try out
@@ -18,7 +20,9 @@ were used:
 ## Unsupervised Learning
 
 The framework used is **Word2Vec Skip-Gram** model. The model was trained using comments from the **Reddit** corpus, from **January 2015**
-to **May 2015**.  After the training phase, different methods were implemented using Word2Vec:
+to **May 2015**.  Also, K-Means Clustering was used in conjunction with Word2Vec
+
+[REDDIT CORPUS LIST](https://archive.org/download/2015_reddit_comments_corpus/reddit_data/)
 
 
 # Libraries
