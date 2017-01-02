@@ -39,7 +39,7 @@ Some of the above methods can be combined using the *TF-IDF* from the Kaggle Dat
 
 ## Evaluation and Results
 
-The following evaluation metrics were used after being cross-validated with **Stratified 10 Fold Sampling**: *Accuracy*, *Precision*, *False Positive Rate (FPR)*, *Area Under ROC*, *Log Loss*, *Brier Score Loss* and *Run-Time Prediction*. Due to the dataset being negatively skewed (about 75% non-bully comments), a lot of importance were put on **Precision**, **FPR**, *Brier Score Loss*, and *Run-Time Prediction*. The results are divided into two jupyter notebooks, based on two different datasets:
+The following evaluation metrics were used after being cross-validated with **Stratified 10 Fold Sampling**: *Accuracy*, *Precision*, *False Positive Rate (FPR)*, *Area Under ROC*, *Log Loss*, *Brier Score Loss* and *Run-Time Prediction*. Due to the dataset being negatively skewed (about 75% non-bully comments), a lot of importance were put on **Precision**, **FPR**, **Brier Score Loss**, and **Run-Time Prediction**. The results are divided into two jupyter notebooks, based on two different datasets:
 
 - [Balanced Dataset][bala]: Using an even number of bully and non-bully comments
 - [Imbalanced Dataset][imba]: Using the full dataset
