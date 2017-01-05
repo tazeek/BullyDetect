@@ -8,7 +8,6 @@ import multiprocessing
 import numpy as np 
 
 from gensim.models import Word2Vec as w2v 
-from sklearn.decomposition import PCA
 from sklearn.cluster import KMeans, MiniBatchKMeans
 
 # Set seed
@@ -25,7 +24,7 @@ def doClustering():
 
 	# Specify the number of words and clusters (250,500,1000,2000,4000)
 	#WORDS = 1000000
-	CLUSTERS = 100
+	CLUSTERS = 200
 
 	# Get the word vectors and the word
 	print("GETTING WORD VECTORS AND WORDS \n\n")
@@ -48,7 +47,7 @@ def doClustering():
 	# Fit the model, get the centroid number and calculate time
 	print("TRAINING K-MEANS WITH %i CLUSTERS \n\n" % (CLUSTERS))
 	start = time.time()
-	idx = k_means.fit_predict(pca_result)
+	idx = k_means.fit_predict(word_vectors)
 	end_time = time.time()
 
 	# Display ending time of fitting
@@ -59,12 +58,11 @@ def doClustering():
 	# Create a Word / Index dictionary
 	# Each vocabulary word is matched to a cluster center
 	# Motivation: https://www.kaggle.com/c/word2vec-nlp-tutorial/details/part-3-more-fun-with-word-vectors
-	exit()
 	word_centroid_map = dict(zip(words,idx))
 
 	# Save the dictionary
 	print("\n\nSAVING MODEL")
-	FILE = "K-Means Models/full_1000C.pk"
+	FILE = "K-Means Models/full_" + str(CLUSTERS) + "C.pk"
 	pickle.dump(word_centroid_map, open(FILE, "wb"))
 
 if __name__ == '__main__':
