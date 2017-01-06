@@ -14,6 +14,9 @@ from sklearn.model_selection import StratifiedKFold
 
 from sklearn.metrics import accuracy_score, roc_auc_score, confusion_matrix, log_loss, brier_score_loss
 
+seed = 7
+np.random.seed(seed)
+
 def evaluatingModel(model, model_name, X, y, skv, file_name):
 
 	# Create Confusion Matrix Dictionary
