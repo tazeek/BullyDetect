@@ -24,7 +24,7 @@ def doClustering():
 
 	# Specify the number of words and clusters (250,500,1000,2000,4000)
 	#WORDS = 1000000
-	CLUSTERS = 600
+	CLUSTERS = 500
 
 	# Get the word vectors and the word
 	print("GETTING WORD VECTORS AND WORDS \n\n")
