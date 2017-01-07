@@ -119,13 +119,13 @@ def evaluatingModel(model, model_name, X, y, skv):
 	run_std = np.std(mean_execution_time)
 
 	# Display results
-	print("MEAN ACCURACY: %0.2f (+/- %0.2f) \n" % (mean_accuracy, accuracy_std))
-	print("MEAN PRECISION: %0.2f (+/- %0.2f) \n" % (mean_precision, precision_std))
-	print("MEAN FALSE POSITIVE RATE: %0.2f (+/- %0.2f) \n" % (mean_fpr, fpr_std))
-	print("MEAN AUC SCORE: %0.2f (+/- %0.2f) \n" % (mean_auc, auc_std))
-	print("MEAN LOG LOSS SCORE: %0.2f (+/- %0.2f) \n" % (mean_log_loss, log_std))
-	print("MEAN BRIER SCORE LOSS: %0.2f (+/- %0.2f) \n" % (mean_brier, brier_std))
-	print("MEAN RUN TIME: %0.2f (+/- %0.2f) \n" % (mean_execution_time, run_std))
+	print("MEAN ACCURACY: %0.3f (+/- %0.3f) \n" % (mean_accuracy, accuracy_std))
+	print("MEAN PRECISION: %0.3f (+/- %0.3f) \n" % (mean_precision, precision_std))
+	print("MEAN FALSE POSITIVE RATE: %0.3f (+/- %0.3f) \n" % (mean_fpr, fpr_std))
+	print("MEAN AUC SCORE: %0.3f (+/- %0.2f) \n" % (mean_auc, auc_std))
+	print("MEAN LOG LOSS SCORE: %0.3f (+/- %0.3f) \n" % (mean_log_loss, log_std))
+	print("MEAN BRIER SCORE LOSS: %0.3f (+/- %0.3f) \n" % (mean_brier, brier_std))
+	print("MEAN RUN TIME: %0.3f (+/- %0.3f) \n" % (mean_execution_time, run_std))
 
 	print("\n\n" + model_name + " STOPS HERE\n\n")
 
