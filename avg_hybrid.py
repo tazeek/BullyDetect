@@ -7,6 +7,29 @@ from gensim.models import Word2Vec as w2v
 
 from evaluation import evaluate
 
+def handleMissingWord(word, model, num_features):
+
+	# n letters 
+	n = 5
+	count = 0.
+	# Pre-initialize an empty numpy array (for speed)
+	featureVec = np.zeros((num_features,),dtype="float32")
+
+	# Substring
+	word = word[:5]
+
+	for model_word in model.index2word:
+
+		if model_word.startswith(word):
+			featureVec = np.add(featureVec, model[model_word])
+			count += 1.
+
+	# Divide it
+	if count != 0:
+		featureVec = np.divide(featureVec, count)
+
+	return featureVec
+
 def characterVec(words, model, num_features):
 	featureVec = np.zeros((num_features,), dtype="float32")
 
@@ -37,6 +60,10 @@ def makeFeatureVec(words, model, vector_dict, num_features):
 		if word in model: #and word not in stop_words:
 			nwords += 1.
 			featureVec = np.add(featureVec,vector_dict[word])
+		else:
+			missingWord = handleMissingWord(word, model, num_features)
+			featureVec = np.add(featureVec, missingWord)
+			nwords += 1.
 
 	# Divide the result by the number of words to get the average
 	featureVec = np.divide(featureVec,nwords)

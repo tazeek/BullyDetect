@@ -16,6 +16,8 @@ from sklearn.model_selection import StratifiedKFold
 
 from sklearn.metrics import accuracy_score, roc_auc_score, confusion_matrix, log_loss, brier_score_loss
 
+np.random.seed(7)
+
 def evaluatingModel(model, model_name, X, y, skv):
 
 	print(model_name + " STARTS HERE\n\n")
